@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+{% block pageTitle %}
+    <div class="row">
+        <div class="col-md-12"><h2>Schedules</h2></div>
+    </div>
+    <hr />
+{% endblock %}
+
+{% block main %}
+	<div class="row">
+        <div class="col-md-12">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    New Schedule
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                    	<form action="{{ path('schedule_new') }}" method="post" {{ form_enctype(form) }}>
+                    		<div class="form-group">
+	                    		{{ form_label(form.scheduleDate) }}
+	                    		{{ form_widget(form.scheduleDate, {'attr': {'class': 'form-control'}} ) }}
+	                    		{{ form_errors(form.scheduleDate) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.startingHour) }}
+	                    		{{ form_widget(form.startingHour, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.startingHour) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.finishHour) }}
+	                    		{{ form_widget(form.finishHour, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.finishHour) }}
+	                    	</div>
+	                    	<div class="form-group">
+                                <label class="required">Service</label>
+                                <input type="text" data-id="appbundle_schedule_service"  name="select_service[service]" data-url="{{ path('service_get') }}" class="form-control autocomplete-service" value="{{ form.vars.data.lastname|default('') }}">
+                            </div>
+	                    	<div class="form-group">
+	                    		{{ form_widget(form.service, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.service) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.sendEmail) }}
+	                    		{{ form_widget(form.sendEmail, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.sendEmail) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.sendEmail) }}
+	                    		{{ form_widget(form.sendEmail, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.sendEmail) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.discount) }}
+	                    		{{ form_widget(form.discount, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.discount) }}
+	                    	</div>
+	                    	{{ form_widget(form.submit, {'attr': {'class': 'btn btn-default'}}) }}
+	                    	{{ form_rest(form) }}
+	                    	<a href="{{ path('schedule') }}" class="btn btn-default">Back to the list</a>
+                    	</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    
+    <script>
+        $(function(){
+            $('.autocomplete-service').each(function(i, el) {
+                var $this = $(el);
+                $this.autocomplete({
+                    source: $this.data('url'),
+                    minLength: 1,
+                    select: function( event, ui ) {
+                        $('#' + $this.data('id')).val(ui.item.id);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+

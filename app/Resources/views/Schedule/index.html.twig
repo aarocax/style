@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+{% endblock %}
+
+{% block pageTitle %}
+    <div class="row">
+        <div class="col-md-12"><h2>Schedules</h2></div>
+    </div>
+    <hr />
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Schedules list
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover" id="dataTable-schedule">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Creationdate</th>
+                                    <th>Scheduledate</th>
+                                    <th>Startinghour</th>
+                                    <th>Finishhour</th>
+                                    <th>Service</th>
+                                    <th>Sendemail</th>
+                                    <th>Discount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for schedule in schedules %}
+                                <tr>
+                                    <td><a href="{{ path('schedule_show', { 'id': schedule.id }) }}">{{ schedule.id }}</a></td>
+                                    <td>{% if schedule.creationDate %}{{ schedule.creationDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{% if schedule.scheduleDate %}{{ schedule.scheduleDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{{ schedule.startingHour|date('H:i:s') }}</td>
+                                    <td>{{ schedule.finishHour|date('H:i:s') }}</td>
+                                    <td>{{ schedule.service }}</td>
+                                    <td>{{ schedule.sendEmail }}</td>
+                                    <td>{{ schedule.discount }}</td>
+                                    <td>
+                                        <a href="{{ path('schedule_show', { 'id': schedule.id }) }}"><i class="fa fa-search fa-fw"></i></a>
+                                        <a href="{{ path('schedule_edit', { 'id': schedule.id }) }}"><i class="fa fa-edit fa-fw"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="{{ path('schedule_new') }}" class="btn btn-primary">Create a new entry</a>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/dataTables/jquery.dataTables.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable-schedule').dataTable();
+        });
+    </script>
+
+{% endblock %}

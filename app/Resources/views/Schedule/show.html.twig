@@ -1,0 +1,56 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Schedule</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Creationdate</th>
+                <td>{{ entity.creationDate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Scheduledate</th>
+                <td>{{ entity.scheduleDate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Startinghour</th>
+                <td>{{ entity.startingHour }}</td>
+            </tr>
+            <tr>
+                <th>Finishhour</th>
+                <td>{{ entity.finishHour }}</td>
+            </tr>
+            <tr>
+                <th>Services</th>
+                <td>{{ entity.service }}</td>
+            </tr>
+            <tr>
+                <th>Sendemail</th>
+                <td>{{ entity.sendEmail }}</td>
+            </tr>
+            <tr>
+                <th>Discount</th>
+                <td>{{ entity.discount }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('schedule') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('schedule_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

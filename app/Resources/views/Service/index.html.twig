@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('js/dataTables/dataTables.bootstrap.css') }}">
+
+{% endblock %}
+
+{% block pageTitle %}
+    <div class="row">
+        <div class="col-md-12"><h2>services</h2></div>
+    </div>
+    <hr />
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    services list
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover" id="dataTable-service">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Time</th>
+                                    <th>Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for service in services %}
+                                    <tr>
+                                        <td><a href="{{ path('service_show', { 'id': service.id }) }}">{{ service.id }}</a></td>
+                                        <td>{{ service.name }}</td>
+                                        <td>{{ service.description }}</td>
+                                        <td>{{ service.time }}</td>
+                                        <td>{{ service.price }}</td>
+                                        <td>
+                                            <a href="{{ path('service_show', { 'id': service.id }) }}"><i class="fa fa-search fa-fw"></i></a>
+                                            <a href="{{ path('service_edit', { 'id': service.id }) }}"><i class="fa fa-edit fa-fw"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="{{ path('service_new') }}" class="btn btn-primary">Create a new entry</a>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/dataTables/jquery.dataTables.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable-service').dataTable();
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block pageTitle %}
+    <div class="row">
+        <div class="col-md-12"><h2>Customers</h2></div>
+    </div>
+    <hr />
+{% endblock %}
+
+{% block main %}
+	<div class="row">
+        <div class="col-md-12">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    New Customer
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                    	<form action="{{ path('customer_new') }}" method="post" {{ form_enctype(form) }}>
+                    		<div class="form-group">
+	                    		{{ form_label(form.name) }}
+	                    		{{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.name) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.lastName) }}
+	                    		{{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.lastName) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.address) }}
+	                    		{{ form_widget(form.address, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.address) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.phone) }}
+	                    		{{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.phone) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.sms) }}
+	                    		{{ form_widget(form.sms, {'attr': {'class': 'form-control input-xlarge focused'}}) }}
+	                    		{{ form_errors(form.sms) }}
+	                    	</div>
+	                    	
+	                    	{{ form_widget(form.submit, {'attr': {'class': 'btn btn-default'}}) }}
+	                    	{{ form_rest(form) }}
+	                    	<a href="{{ path('customer') }}" class="btn btn-default">Back to the list</a>
+                    	</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block pageTitle %}
+    <div class="row">
+        <div class="col-md-12"><h2>Services</h2></div>
+    </div>
+    <hr />
+{% endblock %}
+
+{% block main %}
+	<div class="row">
+        <div class="col-md-12">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    New Service
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                    	<form action="{{ path('service_new') }}" method="post" {{ form_enctype(form) }}>
+                    		<div class="form-group">
+	                    		{{ form_label(form.name) }}
+	                    		{{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.name) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.description) }}
+	                    		{{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.description) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.time) }}
+	                    		{{ form_widget(form.time, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.time) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.price) }}
+	                    		{{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.price) }}
+	                    	</div>
+	                    	{{ form_widget(form.submit, {'attr': {'class': 'btn btn-default'}}) }}
+	                    	{{ form_rest(form) }}
+	                    	<a href="{{ path('service') }}" class="btn btn-default">Back to the list</a>
+                    	</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

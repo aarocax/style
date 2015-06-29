@@ -1,0 +1,23 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+
+parameters:
+    # resource_log: "%kernel.root_dir%/logs/milog"
+    # appointment_entity: AppBundle\Entity\Appointment;
+
+services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+    app_bundle.form.autocomplete_entity_type:
+        class: AppBundle\Form\Type\AutocompleteEntityType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+          - { name: form.type, alias: autocomplete_entity }
+
+    calendar:
+        class: AppBundle\Model\Calendar
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    

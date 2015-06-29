@@ -1,0 +1,183 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+{% block pageTitle %}
+    <div class="row">
+        <div class="col-md-12"><h2>Appointments</h2></div>
+    </div>
+    <hr />
+{% endblock %}
+
+{# personalizamos como se mostrará cada schedule #}
+{% form_theme form _self %}
+
+{% block _appbundle_appointment_schedules_entry_row %}
+{% spaceless %}
+    <div class="col-md-12 well schedule">
+        <button type="button" class="close">&times;</button>
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+
+{% block main %}
+	<div class="row">
+        <div class="col-md-12">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    New Appointment
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                    	<form action="{{ path('appointment_new') }}" method="post" {{ form_enctype(form) }}>
+                    		<div class="row">
+                                <div class="form-group col-md-8">
+                                    <label class="required">Customer</label>
+                                    <input type="text" data-id="appbundle_appointment_customer"  name="select_customer[customer]" data-url="{{ path('customer_get') }}" class="form-control autocomplete" value="{{ form.vars.data.lastname|default('') }}">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    {{ form_label(form.appointmentDate) }}
+                                    {{ form_widget(form.appointmentDate, {'attr': {'class': ''}}) }}
+                                    {{ form_errors(form.appointmentDate) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                {{ form_rest(form) }}
+                            </div>
+	                    	<div class="row">
+    	                    	{{ form_widget(form.submit, {'attr': {'class': 'btn btn-default'}}) }}
+    	                    	<a href="{{ path('appointment') }}" class="btn btn-default">Back to the list</a>
+                            </div>
+                    	</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script>
+        $(function(){
+            $('.autocomplete').each(function(i, el) {
+                var $this = $(el);
+                $this.autocomplete({
+                    source: $this.data('url'),
+                    minLength: 1,
+                    select: function( event, ui ) {
+                        $('#' + $this.data('id')).val(ui.item.id);
+                        event.preventDefault();
+                        this.value = ui.item.label+ ' ' +ui.item.lastName;
+                    }
+                });
+                $this.autocomplete( "instance" )._renderItem = function( ul, item ) {
+                  return $( "<li>" )
+                    .append( "<a>" + item.label + " " + item.lastName + "</a>" )
+                    .appendTo( ul );
+                };
+            });
+           
+        });
+    </script>
+    
+    <script>
+
+        function addTagForm(collectionHolder) {
+            // Get the data-prototype explained earlier
+            var prototype = collectionHolder.data('prototype');
+
+            // get the new index
+            var index = collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a address" link li
+            var $newFormLi = $('<div></div>').append(newForm);
+            collectionHolder.append($newFormLi);
+        }
+
+        // Get the div that holds the collection of addresses
+        var collectionHolder = $('div.schedules');
+
+        // setup an "add a address" link
+        var $newLinkLi = $('<a href="#" id="botton-add" class="btn btn-xs btn-info add_schedule_link"><i class="glyphicon glyphicon-plus glyphicon-white"></i> Añadir un schedule</a>');
+
+        $(function(){
+
+            // add the "add a address" anchor and li to the addresses div
+            collectionHolder.parent().append($newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            collectionHolder.data('index', collectionHolder.find(':input').length);
+
+            $newLinkLi.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new address form (see next code block)
+                addTagForm(collectionHolder);
+            });
+
+            $(document).on('click', '.close', function(){
+                $(this).closest('.schedule').fadeOut(500, function() {
+                    $(this).remove();
+                });
+            });
+        });
+    </script>
+    <script>
+        function addRow() {
+            $('.autocompleteservice').each(function(i, el) {
+                var $this = $(el);
+                $this.autocomplete({
+                    source: $this.data('url'),
+                    minLength: 1,
+                    select: function( event, ui ) {
+                        $('#' + $this.data('id')).val(ui.item.id);
+                    }
+                });
+            });
+
+            $('.autocompletestaff').each(function(i, el) {
+                var $this = $(el);
+                $this.autocomplete({
+                    source: $this.data('url'),
+                    minLength: 1,
+                    select: function( event, ui ) {
+                        $('#' + $this.data('id')).val(ui.item.id);
+                        event.preventDefault();
+                        this.value = ui.item.label+ ' ' +ui.item.lastName;
+                    }
+                });
+                $this.autocomplete( "instance" )._renderItem = function( ul, item ) {
+                  return $( "<li>" )
+                    .append( "<a>" + item.label + " " + item.lastName + "</a>" )
+                    .appendTo( ul );
+                };
+            });
+        }
+
+        function cargar_eventos() {
+            var elemento=document.getElementById('botton-add');
+            elemento.addEventListener('click', addRow, false);
+            
+        }
+        window.addEventListener('load', cargar_eventos, false);
+    </script>
+{% endblock %}

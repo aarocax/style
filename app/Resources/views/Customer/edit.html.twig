@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block pageTitle %}
+    <div class="row">
+        <div class="col-md-12"><h2>Customers</h2></div>
+    </div>
+    <hr />
+{% endblock %}
+{% block main %}
+
+    {{ form(edit_form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('customer') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}
