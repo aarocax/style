@@ -13,13 +13,18 @@ class ScheduleType extends AbstractType
     {
         $builder
             ->add('scheduleDate', 'date', array(
-                'label' => 'Schedule Date'
+                'label' => 'Schedule Date',
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
             ))
             ->add('startingHour', null, array(
-                'label' => 'starting Hour'
+                'label' => 'starting Hour',
+                'widget' => 'single_text',
+                
             ))
             ->add('finishHour', null, array(
-                'label' => 'finish Hour'
+                'label' => 'finish Hour',
+                'widget' => 'single_text',
             ))
             ->add('services', null, array(
                 'mapped' => false,

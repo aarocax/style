@@ -18,7 +18,22 @@
             <!-- Advanced Tables -->
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Appointment Calendar {{ date|date('Y-m-d H:i:s')}}
+                	<div class="row">
+                		<div class="col-md-9">
+                			Appointment Calendar {{ date|date('Y-m-d H:i:s')}}
+                		</div>
+                		<div class="col-md-3">
+              				<form class="" action="{{ path('calendar') }}" method="POST" id="contact_form">
+			        			<div class="input-group">
+									{{ form_widget(formDate.fecha, { 'attr': {'tabindex' : 1, 'value': date|date('Y-m-d'), 'class':'form-control input-sm'  } }) }}
+						            {{ form_rest(formDate) }}
+							      <span class="input-group-btn">
+							        <button class="btn btn-default btn-sm" type="submit"><i class="fa fa-search"></i></button>
+							      </span>
+							    </div>
+		        			</form>
+                		</div>
+                	</div>
                 </div>
                 <div class="panel-body">
              		<ul class="nav nav-tabs">

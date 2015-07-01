@@ -20,7 +20,8 @@ class AppointmentType extends AbstractType
             ->add('appointmentDate', 'date', array(
                 'label' => 'fecha',
                 'required' => true,
-                'format' => 'dd-MM-yyyy',
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
                 'input'  => 'datetime',
             ))
             //->add('date')

@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+use AppBundle\Form\SearchDateType;
+
 use AppBundle\Model\Calendar;
 
 /**
@@ -22,20 +24,21 @@ class CalendarController extends Controller
      * Show calendar.
      *
      * @Route("/", name="calendar")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $fecha = new \Datetime;
+        $formDate = $this->createForm(new SearchDateType());
+        $date = new \Datetime;
         //$fecha->add(date_interval_create_from_date_string('10 days'));
         $interval = 15;
         $calendar = $this->get('calendar');
-        $week =  $calendar->makeCalendar($interval, $fecha);
-        ld($week['salas']);
+        $week =  $calendar->makeCalendar($interval, $date);
         return $this->render('Calendar/index.html.twig', array(
             'horario' => $week['horario'],
-            'date' => $fecha,
-            'salas' => $week['salas']
+            'date' => $date,
+            'salas' => $week['salas'],
+            'formDate' => $formDate->createView(),
         ));
     }
 }

@@ -18,10 +18,14 @@
 {% block _appbundle_appointment_schedules_entry_row %}
 {% spaceless %}
     <div class="col-md-12 well schedule">
-        <button type="button" class="close">&times;</button>
-        {{ form_label(form) }}
-        {{ form_errors(form) }}
-        {{ form_widget(form) }}
+        <div class="row">
+            <button type="button" class="close">&times;</button>
+        </div>
+        <div class="row">
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form.scheduleDate) }}
+        </div>
     </div>
 {% endspaceless %}
 {% endblock %}
@@ -45,7 +49,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     {{ form_label(form.appointmentDate) }}
-                                    {{ form_widget(form.appointmentDate, {'attr': {'class': ''}}) }}
+                                    {{ form_widget(form.appointmentDate, { 'attr': {'tabindex' : 1, 'value': date|date('Y-m-d'), 'class':'form-control input-sm'  } }) }}
                                     {{ form_errors(form.appointmentDate) }}
                                 </div>
                             </div>

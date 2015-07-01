@@ -42,6 +42,8 @@ class AppointmentController extends Controller
      */
     public function newAction(Request $request)
     {
+        $date=$request->query->get("fecha");
+        $time=$request->query->get("hora");
         $appointment = new Appointment();
         $form   = $this->createCreateForm($appointment);
         $form->handleRequest($request);
@@ -53,7 +55,12 @@ class AppointmentController extends Controller
             return $this->redirect($this->generateUrl('appointment_show', array('id' => $appointment->getId())));
         }
 
-        return $this->render('Appointment/new.html.twig', array('appointment' => $appointment, 'form'   => $form->createView()));
+        return $this->render('Appointment/new.html.twig', array(
+            'appointment' => $appointment,
+            'form'   => $form->createView(),
+            'date' => $date,
+            'time' => $time,
+        ));
     }
 
     /**
