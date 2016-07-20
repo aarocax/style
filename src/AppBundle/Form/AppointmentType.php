@@ -18,19 +18,27 @@ class AppointmentType extends AbstractType
     {
         $builder
             ->add('appointmentDate', 'date', array(
-                'label' => 'fecha',
+                'label' => 'date',
                 'required' => true,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'input'  => 'datetime',
             ))
-            //->add('date')
             ->add('customer', 'autocomplete_entity', array(
                 'class'        => 'AppBundle\Entity\Customer',
                 'update_route' => 'customer_get',
                 'label'        => 'Customer',
                 'constraints'  => new NotNull(),
             ))
+            ->add('paid', 'checkbox', array(
+                'label' => 'paid',
+                'required' => false,
+            ))
+            ->add('debt', 'text', array(
+                'label' => 'debt',
+                'required' => false,
+            ))
+
             ->add('schedules', 'collection', array(
                 'type'           => new ScheduleType(),
                 //'label'          => 'Schedules',

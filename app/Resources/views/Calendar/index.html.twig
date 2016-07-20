@@ -20,7 +20,7 @@
                 <div class="panel-heading">
                 	<div class="row">
                 		<div class="col-md-9">
-                			Appointment Calendar {{ date|date('Y-m-d H:i:s')}}
+                			Appointment Calendar {{ date|date('Y-m-d')}}
                 		</div>
                 		<div class="col-md-3">
               				<form class="" action="{{ path('calendar') }}" method="POST" id="contact_form">
@@ -37,41 +37,62 @@
                 </div>
                 <div class="panel-body">
              		<ul class="nav nav-tabs">
-                        <li class="active"><a href="#home" data-toggle="tab">Home</a>
-                        </li>
-                        {% for key, sala in salas %}
-							{% if loop.first %}
-								<li role="presentation"><a href='#{{sala['id']}}' data-toggle="tab">{{key}}</a></li>
-							{% else %}
-								<li role="presentation"><a href='#{{sala['id']}}' data-toggle="tab">{{key}}</a></li>
-							{% endif %}
-						{% endfor %}
-                    </ul>
+                  <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+                  {% for key, sala in salas %}
+										{% if loop.first %}
+											<li role="presentation"><a href='#{{sala['id']}}' data-toggle="tab">{{key}}</a></li>
+										{% else %}
+											<li role="presentation"><a href='#{{sala['id']}}' data-toggle="tab">{{key}}</a></li>
+										{% endif %}
+									{% endfor %}
+                </ul>
 					<div class="tab-content">
 						<div class="tab-content">
+							{# tab summary #}
                             <div class="tab-pane fade active in" id="home">
-							    <table class="table">
+							    <table class="table td-calendar">
 						            <thead>
 						                <tr>
 						                	<th><center>Hora</center></th>
-						                	<th><center>sala 1</center></th>
-						                	<th><center>sala_2</center></th>
+						                	{#{ salas | ladybug_dump}#}
+						                	{% for key, sala in salas %}
+						                		<th><center>{{key}}</center></th>
+						                	{% endfor %}
 						                </tr>
 						            </thead>
 						            <tbody id="tabla">
 						            	{% for h in horario %}
 							            	<tr>
 							            		<td><center>{{ h }}</center></td>
-		                        				<td><a href=""><center>&nbsp;</center></a></td>
-		                        				<td><a href=""><center>&nbsp;</center></a></td>
+							            		{% for key, sala in summary %}
+					                				<td>
+					                					{% if sala[h]['nombreCita'] %}
+					                						<center>
+					                							<a href="" class="btn btn-default btn-xs calendar-buttons appointment" data-toggle="popover" title="{{ sala[h]['nombreCita'] }}">{{ sala[h]['nombreCita'] }}</a>
+					                						</center>
+					                					{% else %}
+					                						<center>
+								                                <form action="{path(appointment_new}" method="post">
+								                                	<input type="hidden" name="date" value=""/>
+								                                	<input type="hidden" name="time" value="{{ sala[h]['horaCita'] }}"/>
+								                                	<input type="hidden" name="room" value=""/>
+								                                	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+								                                </form>
+							                                </center>
+
+					                					{% endif %}
+					                				</td>
+						                		{% endfor %}
+						                		
 		                        			</tr>
 	                        			{% endfor %}
 						            </tbody>
 						        </table>
                             </div>
+                            {# end tab summary #}
                             {% for key, sala in salas %}
                             	<div class="tab-pane fade" id="{{sala['id']}}">
-	                        		<table class="table">
+	                        		<table class="table td-calendar">
 	                        			<thead>
 							                <tr>
 							                	<th><center>Hora</center></th>
@@ -81,7 +102,7 @@
 							                	<th><center>Jueves</center></th>
 							                	<th><center>Viernes</center></th>
 							                	<th><center>Sábado</center></th>
-							                	<th><center>Domingo</center></th>
+							                	<th><center>Domin-</center></th>
 							                </tr>
 							            </thead>
 							            <tbody id="tabla">
@@ -90,52 +111,116 @@
 								            		<td><center>{{ h }}</center></td>
 			                        				<td>
 			                        					{% if sala['semana']['Lunes'][h]['idCita'] %}
-							                                <a href="" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?"><center>{{ sala['semana']['Lunes'][h]['nombreCita'] }}</a></center>
+			                        						{% if sala['semana']['fechaLunes'] >= date|date('Y-m-d') %}
+							                               	<a href="" class="btn btn-default btn-xs calendar-buttons appointment" data-toggle="popover" title="{{ sala['semana']['Lunes'][h]['nombreCita'] }}">{{ sala['semana']['Lunes'][h]['nombreCita'] }}</a>
+							                                {% else %}
+							                                	<a href="" class="btn btn-default btn-xs calendar-buttons appointment-pass" data-toggle="popover" title="{{ sala['semana']['Lunes'][h]['nombreCita'] }}">{{ sala['semana']['Lunes'][h]['nombreCita'] }}</a>
+							                            	{% endif %}
 							                            {% else %}
-							                                {# <a href=""><center>&nbsp;</center></a> #}
-							                                <a href="{{ path('appointment_new',{'fecha': sala['semana']['fechaLunes'], 'hora': sala['semana']['Lunes'][h]['horaCita']}) }}"><center>&nbsp;</center></a>
+							                                <center>
+								                                <form action="{path(appointment_new}" method="post">
+								                                	<input type="hidden" name="date" value="{{sala['semana']['fechaLunes']}}"/>
+								                                	<input type="hidden" name="time" value="{{sala['semana']['Lunes'][h]['horaCita']}}"/>
+								                                	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
+								                                	{% if sala['semana']['fechaLunes'] >= date|date('Y-m-d') %}
+								                                		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+								                                	{% else %}
+								                                		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons calendar-buttons-pass">-</button>
+								                                	{% endif %}
+								                                </form>
+							                                </center>
 							                            {% endif %}
 			                        				</td>
 			                        				<td>
 			                        					{% if sala['semana']['Martes'][h]['idCita'] %}
-							                                <a href=""><center>{{ sala['semana']['Martes'][h]['nombreCita'] }}</a></center>
+							                                <a href="" class="btn btn-default btn-xs calendar-buttons appointment" data-toggle="popover" title="{{ sala['semana']['Martes'][h]['nombreCita'] }}">{{ sala['semana']['Martes'][h]['nombreCita'] }}</a>
 							                            {% else %}
-							                                <a href=""><center>&nbsp;</center></a>
+							                                <center>
+								                                <form action="{path(appointment_new}" method="post">
+								                                	<input type="hidden" name="date" value="{{sala['semana']['fechaMartes']}}"/>
+								                                	<input type="hidden" name="time" value="{{sala['semana']['Martes'][h]['horaCita']}}"/>
+								                                	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
+								                                	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+								                                </form>
+							                                </center>
 							                            {% endif %}
 							                        </td>
 			                        				<td>
 			                        					{% if sala['semana']['Miercoles'][h]['idCita'] %}
-							                                <a href=""><center>{{ sala['semana']['Miercoles'][h]['nombreCita'] }}</a></center>
+							                                <a href="" class="btn btn-default btn-xs calendar-buttons appointment" data-toggle="popover" title="{{ sala['semana']['Miercoles'][h]['nombreCita'] }}">{{ sala['semana']['Miercoles'][h]['nombreCita'] }}</a>
 							                            {% else %}
-							                                <a href=""><center>&nbsp;</center></a>
+							                                <center>
+								                                <form action="{path(appointment_new}" method="post">
+								                                	<input type="hidden" name="date" value="{{sala['semana']['fechaMiercoles']}}"/>
+								                                	<input type="hidden" name="time" value="{{sala['semana']['Miercoles'][h]['horaCita']}}"/>
+								                                	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
+								                                	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+								                                </form>
+							                                </center>
 							                            {% endif %}
 							                        </td>
 			                        				<td>
 			                        					{% if sala['semana']['Jueves'][h]['idCita'] %}
-							                                <a href=""><center>{{ sala['semana']['Jueves'][h]['nombreCita'] }}</a></center>
+			                        						<center>
+							                                	<a href="" class="btn btn-default btn-xs calendar-buttons appointment" data-toggle="popover" title="{{ sala['semana']['Jueves'][h]['nombreCita'] }}">{{ sala['semana']['Jueves'][h]['nombreCita'] }}</a>
+							                            	</center>
 							                            {% else %}
-							                                <a href=""><center>&nbsp;</center></a>
+							                                <center>
+								                                <form action="{path(appointment_new}" method="post">
+								                                	<input type="hidden" name="date" value="{{sala['semana']['fechaJueves']}}"/>
+								                                	<input type="hidden" name="time" value="{{sala['semana']['Jueves'][h]['horaCita']}}"/>
+								                                	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
+								                                	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+								                                </form>
+							                                </center>
 							                            {% endif %}
 							                        </td>
 			                        				<td>
 			                        					{% if sala['semana']['Viernes'][h]['idCita'] %}
-							                                <a href=""><center>{{ sala['semana']['Viernes'][h]['nombreCita'] }}</a></center>
+			                        						<center>
+							                                	<a href="" class="btn btn-default btn-xs calendar-buttons appointment" data-toggle="popover" title="{{ sala['semana']['Viernes'][h]['nombreCita'] }}">{{ sala['semana']['Viernes'][h]['nombreCita'] }}</a>
+							                                </center>
 							                            {% else %}
-							                                <a href=""><center>&nbsp;</center></a>
+							                                <center>
+								                                <form action="{path(appointment_new}" method="post">
+								                                	<input type="hidden" name="date" value="{{sala['semana']['fechaViernes']}}"/>
+								                                	<input type="hidden" name="time" value="{{sala['semana']['Viernes'][h]['horaCita']}}"/>
+								                                	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
+								                                	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+								                                </form>
+							                                </center>
 							                            {% endif %}
 							                        </td>
 			                        				<td>
 			                        					{% if sala['semana']['Sabado'][h]['idCita'] %}
-							                                <a href=""><center>{{ sala['semana']['Sabado'][h]['nombreCita'] }}</a></center>
+			                        						<center>
+							                                	<a href="" class="btn btn-default btn-xs calendar-buttons appointment" data-toggle="popover" title="{{ sala['semana']['Sabado'][h]['nombreCita'] }}">{{ sala['semana']['Sabado'][h]['nombreCita'] }}</a>
+							                                </center>
 							                            {% else %}
-							                                <a href=""><center>&nbsp;</center></a>
+							                                <center>
+								                                <form action="{path(appointment_new}" method="post">
+								                                	<input type="hidden" name="date" value="{{sala['semana']['fechaSabado']}}"/>
+								                                	<input type="hidden" name="time" value="{{sala['semana']['Sabado'][h]['horaCita']}}"/>
+								                                	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
+								                                	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+								                                </form>
+							                                </center>
 							                            {% endif %}
 							                        </td>
 			                        				<td>
 			                        					{% if sala['semana']['Domingo'][h]['idCita'] %}
-							                                <a href=""><center>{{ sala['semana']['Domingo'][h]['nombreCita'] }}</a></center>
+			                        						<center>
+							                                	<a href="" class="btn btn-default btn-xs calendar-buttons appointment" data-toggle="popover" title="{{ sala['semana']['Domingo'][h]['nombreCita'] }}">{{ sala['semana']['Domingo'][h]['nombreCita'] }}</a>
+							                            	</center>
 							                            {% else %}
-							                                <a href=""><center>&nbsp;</center></a>
+							                                <center>
+								                                <form action="{path(appointment_new}" method="post">
+								                                	<input type="hidden" name="date" value="{{sala['semana']['fechaDomingo']}}"/>
+								                                	<input type="hidden" name="time" value="{{sala['semana']['Domingo'][h]['horaCita']}}"/>
+								                                	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
+								                                	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons" >-</button>
+								                                </form>
+							                                </center>
 							                            {% endif %}
 							                        </td>
 			                        			</tr>
@@ -154,4 +239,10 @@
 
 
 {% block javascripts %}
+	<script>
+		{{ parent() }}
+		$(function () {
+		  $('[data-toggle="tooltip"]').tooltip()
+		})
+	</script>
 {% endblock %}

@@ -34,6 +34,29 @@ class CustomerController extends Controller
         return $this->render('Customer/index.html.twig', array('customers' => $customers));
     }
 
+
+    /**
+     * Finds and a Customer entity.
+     *
+     * @Route("/get-customers-by-id/{id}", requirements={"id" = "\d+"}, name="customer_by_id")
+     * @Method("GET")
+     */
+    public function getCustomerByIdAction(Customer $customer)
+    {
+        //$id = $request->query->get('id', null);
+        //ld($id);
+        $em = $this->getDoctrine()->getManager();
+
+        $cliente = $em->getRepository('AppBundle:Customer')->find($customer->getId());
+        //ld($cliente);
+        $cli = array(
+            'name' => $cliente->getName(),
+            'lastName' => $cliente->getLastName(),
+        );
+        return new JsonResponse($cli);
+
+    }
+
     /**
      * Displays a form to create and persist a new Customer entity.
      *
@@ -42,6 +65,7 @@ class CustomerController extends Controller
      */
     public function newAction(Request $request)
     {
+
         $customer = new Customer();
         $form   = $this->createCreateForm($customer);
         $form->handleRequest($request);
@@ -85,8 +109,12 @@ class CustomerController extends Controller
     {
         $deleteForm = $this->createDeleteForm($customer);
 
+        $em = $this->getDoctrine()->getManager();
+        $schedules = $em->getRepository('AppBundle:Customer')->getSchedules($customer->getId());
+
         return $this->render('Customer/show.html.twig', array(
             'customer' => $customer,
+            'schedules' => $schedules,
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -184,5 +212,23 @@ class CustomerController extends Controller
         $em = $this->getDoctrine()->getManager();
         $customers = $em->getRepository('AppBundle:Customer')->findByTerm($term);
         return new JsonResponse($customers);
+    }
+
+    /**
+     * @Route("/get-schedules/{id}", name="customer_get_schedules")
+     */
+    public function getPersonsSchedulesAction(Customer $customer)
+    {
+        //$term = $request->query->get('term', null);
+        $em = $this->getDoctrine()->getManager();
+        $schedules = $em->getRepository('AppBundle:Customer')->getSchedules($customer->getId());
+        $schedules2 = $em->getRepository('AppBundle:Customer')->getSchedulesGroupByServices($customer->getId());
+        
+        //return new JsonResponse($schedules2);
+        return $this->render('Customer/report.html.twig', array(
+            'customer' => $customer,
+            'schedules' => $schedules,
+            'schedules2' => $schedules2,
+            ));
     }
 }

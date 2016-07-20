@@ -1,33 +1,55 @@
 {% extends '::base.html.twig' %}
 
-{% block body -%}
+{% block main -%}
     <h1>Appointment</h1>
+
+    {#{ appointment|ladybug_dump }#}
 
     <table class="record_properties">
         <tbody>
             <tr>
                 <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{{ entity.date|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
                 <th>Customer</th>
-                <td>{{ entity.customer }}</td>
+                <th>Date</th>
             </tr>
+            <tr>
+                <td>{{ appointment.id }}</td>
+                <td>{{ appointment.customer }}</td>
+                <td>{{ appointment.appointmentDate|date('Y-m-d') }}</td>
+            </tr>
+        </tbody>    
+        <tbody>
+            {% for schedule in appointment.schedules %}
+            	<tr>
+                <th>Service</th>
+                <th>f. hour</th>
+                <th>f. hour</th>
+                <th>S. room</th>
+                <th>S. Name</th>
+                <th>S. Discount</th>
+                <th>S. Price</th>
+            	</tr>
+            	<tr>
+                <td>{{ schedule.service }}</td>
+                <td>{{ schedule.startingHour|date('H:i:s') }}</td>
+                <td>{{ schedule.finishHour|date('H:i:s') }}</td>
+                <td>{{ schedule.room.name }}</td>
+                <td>{{ schedule.staff.name }} {{ schedule.staff.lastName}}</td>
+                <td>{{ schedule.discount }}</td>
+								<td>{{ schedule.price }}</td>
+            	</tr>
+            {% endfor %}
         </tbody>
     </table>
 
-        <ul class="record_actions">
+<ul class="record_actions">
     <li>
         <a href="{{ path('appointment') }}">
             Back to the list
         </a>
     </li>
     <li>
-        <a href="{{ path('appointment_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('appointment_edit', { 'id': appointment.id }) }}">
             Edit
         </a>
     </li>

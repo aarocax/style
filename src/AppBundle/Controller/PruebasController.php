@@ -29,8 +29,35 @@ class PruebasController extends Controller
     public function indexAction()
     {
         
-        return $this->render('Pruebas/index.html.twig');
+        return $this->render('Pruebas/index.html.twig', array(
+            'action' => 'indecAction',
+            ));
     }
+
+    /**
+     * Show pruebas.
+     *
+     * @Route("/send-mail", name="send-mail")
+     * @Method("GET")
+     */
+    public function sendMailAction()
+    {
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Mensaje desde style and arts - Avisos sms')
+            ->setFrom('styleart@styleart.es')
+            ->setTo('aarocax@hotmail.com')
+            //->setReplyTo('styleart@styleart.es')
+            //->setCc('aarocax@hotmail.com')
+            ->setBody('este es el body');
+            //->attach(\Swift_Attachment::fromPath(__DIR__.'/../../../../web/enviossms/bulksms.csv'));
+
+        $this->get('mailer')->send($message);
+        return $this->render('Pruebas/index.html.twig', array(
+            'action' => 'send mail',
+            ));
+    }
+
 
     /**
      * Displays a form to create and persist a new Customer entity.

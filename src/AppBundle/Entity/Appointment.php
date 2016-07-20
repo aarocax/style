@@ -49,12 +49,31 @@ class Appointment
     protected $schedules;
 
     /**
+     * @var boolean $paid
+     *
+     * @ORM\Column(name="paid", type="boolean", nullable=true)
+     * @Assert\Type(type="bool")
+     */
+    private $paid;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="debt", type="decimal", scale=2, nullable=true)
+     */
+    private $debt;
+
+
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->creationDate = new \DateTime();
-        $this->schedules = new \Doctrine\Common\Collections\ArrayCollection();
+      $this->creationDate = new \DateTime();
+      $this->schedules = new \Doctrine\Common\Collections\ArrayCollection();
+      $this->debt = 0.0;
+      $this->paid = FALSE;
     }
 
 
@@ -158,5 +177,51 @@ class Appointment
     public function getSchedules()
     {
         return $this->schedules;
+    }
+
+    /**
+     * Set debt
+     *
+     * @param float $debt
+     * @return Appointment
+     */
+    public function setDebt($debt)
+    {
+        $this->debt = $debt;
+
+        return $this;
+    }
+
+    /**
+     * Get debt
+     *
+     * @return float 
+     */
+    public function getDebt()
+    {
+        return $this->debt;
+    }
+
+    /**
+     * Set paid
+     *
+     * @param boolean $paid
+     * @return Appointment
+     */
+    public function setPaid($paid)
+    {
+        $this->paid = $paid;
+
+        return $this;
+    }
+
+    /**
+     * Get paid
+     *
+     * @return boolean 
+     */
+    public function getPaid()
+    {
+        return $this->paid;
     }
 }

@@ -39,7 +39,8 @@ class ServiceRepository extends EntityRepository
         $query = $this->getEntityManager()->createQuery("
             SELECT service.id as id,
                    service.name as label,
-                   service.price as price
+                   service.price as price,
+                   service.time as time
             FROM AppBundle:Service service
             WHERE service.name LIKE :term
         ")->setParameter('term', '%' . $term . '%');

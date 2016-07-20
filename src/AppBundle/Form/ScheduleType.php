@@ -16,21 +16,29 @@ class ScheduleType extends AbstractType
                 'label' => 'Schedule Date',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
+                //'format' => 'dd-MM-yyyy',
+                'input'  => 'datetime',
             ))
             ->add('startingHour', null, array(
-                'label' => 'starting Hour',
+                'label' => 'Star Hour',
                 'widget' => 'single_text',
+                'attr' => array(
+                    'class' => 'form-control input-sm',
+                    ),
                 
             ))
             ->add('finishHour', null, array(
-                'label' => 'finish Hour',
+                'label' => 'End Hour',
                 'widget' => 'single_text',
+                'attr' => array(
+                    'class' => 'form-control input-sm',
+                    ),
             ))
             ->add('services', null, array(
                 'mapped' => false,
                 'label' => 'services',
                 'attr' => array(
-                    'class'=>'autocompleteservice ui-autocomplete-input',
+                    'class'=>'autocompleteservice ui-autocomplete-input form-control input-sm',
                     'data-id' => 'appbundle_appointment_schedules___name___service',
                     'data-url' => '/style.local/web/app_dev.php/service/get-services',
                     'autocomplete' => 'off'
@@ -46,7 +54,7 @@ class ScheduleType extends AbstractType
                 'mapped' => false,
                 'label' => 'staffs',
                 'attr' => array(
-                    'class'=>'autocompletestaff ui-autocomplete-input',
+                    'class'=>'autocompletestaff ui-autocomplete-input form-control input-sm',
                     'data-id' => 'appbundle_appointment_schedules___name___staff',
                     'data-url' => '/style.local/web/app_dev.php/staff/get-staffs',
                     'autocomplete' => 'off'
@@ -62,7 +70,7 @@ class ScheduleType extends AbstractType
                 'mapped' => false,
                 'label' => 'rooms',
                 'attr' => array(
-                    'class'=>'autocompleteservice ui-autocomplete-input',
+                    'class'=>'autocompleteroom ui-autocomplete-input form-control input-sm',
                     'data-id' => 'appbundle_appointment_schedules___name___room',
                     'data-url' => '/style.local/web/app_dev.php/room/get-rooms',
                     'autocomplete' => 'off'
@@ -74,9 +82,19 @@ class ScheduleType extends AbstractType
                 'label'        => 'room',
                 'constraints'  => new NotNull(),
             ))
-            ->add('discount', 'integer', array(
-                'label' => 'Descuento'
+            ->add('discount', null, array(
+                'label' => 'S. off',
+                'attr' => array(
+                    'class' => 'form-control input-sm',
+                    ),
+
             ))
+            ->add('price', null, array(
+                'label' => 'Price',
+                'attr' => array(
+                    'class' => 'form-control input-sm',
+                    ),
+                ))
         ;
     }
 

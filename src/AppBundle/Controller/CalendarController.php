@@ -34,11 +34,16 @@ class CalendarController extends Controller
         $interval = 15;
         $calendar = $this->get('calendar');
         $week =  $calendar->makeCalendar($interval, $date);
+        //ld($week['horario']);
+        //ld($week['salas']);
+        $summary = $calendar->summary($week['salas'], $date);
+        //ld($summary);
         return $this->render('Calendar/index.html.twig', array(
             'horario' => $week['horario'],
             'date' => $date,
             'salas' => $week['salas'],
             'formDate' => $formDate->createView(),
+            'summary' => $summary,
         ));
     }
 }

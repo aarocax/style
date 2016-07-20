@@ -21,31 +21,63 @@ class Calendar
     	$this->em = $entityManager;
     }
 
+    public function summary($salas, $date)
+    {
+        $summary = array();
+        $diaSemana = array();
+        $horario = array();
+        foreach ($salas as $key => $value) {
+            foreach ($salas[$key]['semana'] as $key2 => $value2) {
+                $dateStr = $date->format('Y-m-d');
+                if (is_array($value2)) {
+                    $horario = $value2;
+                    $diaSemana =  $key2;
+                }
+                if ($value2 == $dateStr) {
+                    $sumary[$key]['id'] = $salas[$key]['id'];
+                    $sumary[$key] = $horario;
+
+                }
+                
+            }
+        }
+        return $sumary;
+    }
+
     public function makeCalendar($interval, $date)
     {
         // leo las distintas salas
         $rooms = $this->em->getRepository('AppBundle:Room')->findAll();
 
+        $calendar = array();
+
         foreach ($rooms as $key => $room) {
             // leo los schedules de la semana
             $schedules = $this->getWeekSchedules($date, $room->getId());
 
-            // leo los schedules del día pra la vista resumen
-            $schedulesPresentDay = $this->getPresentDaySchedules($date, $room->getId());
+            // leo los schedules del día para la vista resumen
+            //$schedulesPresentDay = $this->getPresentDaySchedules($date, $room->getId());
+            //dump($schedulesPresentDay);
+            //$calendar['summary'][] = $schedulesPresentDay;
+            
 
             // creo un array de horas para poder imprimir en twig
-            $horario = TimeMachine::arrayHoras();
+            $horario = TimeMachine::arrayHoras($interval);
 
             // creo el array que contendrá las citas
             $firstDayOfWeek = TimeMachine::firstDayOfWeek($date);
             $semana = $this->createArrayWeek($horario,  $firstDayOfWeek);
 
             // llenamos el array semana con los schedules 
-            $semana = $this->putSchedulesInWeekarray($semana, $schedules);
+            $semana = $this->putSchedulesInWeekarray($semana, $schedules, $interval);
             $horario = $this->createArrayHours($interval);
+
             $calendar['horario'] = $horario;
+
             $calendar['salas'][$room->getName()]['semana'] = $semana;
-            $calendar['salas'][$room->getName()]['id'] = 'room_'.$room->getId();
+            $calendar['salas'][$room->getName()]['id'] = $room->getId();
+
+            //llemanos el array con los schedules del día para la vista resumen
         }
         return $calendar;
     }
@@ -65,19 +97,23 @@ class Calendar
         return $schedulesPresentDay;
     }
 
-    private function putSchedulesInWeekarray($semana, Array $schedules)
+    private function putSchedulesInWeekarray($semana, Array $schedules, $interval)
     {
         $diasSemana = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
 
         foreach ($schedules as $schedule) {
-            
+
+           
             $h = array('minutes' => (int)$schedule['startingHour']->format('i'),'hours'=>(int)$schedule['startingHour']->format('H'));
             $hf = array('minutes' => (int)$schedule['finishHour']->format('i'),'hours'=>(int)$schedule['finishHour']->format('H'));
             
+            
+            // Ojo, el redondeo de horas falla
+            //ld($h);
             $hr = TimeMachine::roundMinutes($h); // obtengo la hora inicio redondeada
             $hfr = TimeMachine::roundMinutes($hf); // obtengo la hora final redondeada
 
-            $intervaloHoras = TimeMachine::arrayIntervaloHoras($hr, $hfr);
+            $intervaloHoras = TimeMachine::arrayIntervaloHoras($hr, $hfr, $interval);
 
             $d = $diasSemana[date('N', strtotime($schedule['scheduleDate']->format('Y-m-d')))-1];
             foreach ($intervaloHoras as $value) {

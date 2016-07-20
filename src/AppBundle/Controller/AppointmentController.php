@@ -42,8 +42,9 @@ class AppointmentController extends Controller
      */
     public function newAction(Request $request)
     {
-        $date=$request->query->get("fecha");
-        $time=$request->query->get("hora");
+        $date=$request->request->get("date");
+        $time=$request->request->get("time");
+        $room=$request->request->get("room");
         $appointment = new Appointment();
         $form   = $this->createCreateForm($appointment);
         $form->handleRequest($request);
@@ -60,6 +61,7 @@ class AppointmentController extends Controller
             'form'   => $form->createView(),
             'date' => $date,
             'time' => $time,
+            'room' => $room,
         ));
     }
 
@@ -111,20 +113,35 @@ class AppointmentController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppBundle:Appointment')->find($id);
+        $appointment = $em->getRepository('AppBundle:Appointment')->find($id);
 
-        if (!$entity) {
+        if (!$appointment) {
             throw $this->createNotFoundException('Unable to find Appointment entity.');
         }
 
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $originalSchedules = array();
+        // Create an array of the current Address objects in the database
+        foreach ($appointment->getSchedules() as $schedule) {
+            $originalSchedules[] = $schedule;
+        }
 
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+        dump($originalSchedules);
+
+        $editForm = $this->createEditForm($appointment);
+        $deleteForm = $this->createDeleteForm($appointment);
+
+       
+
+
+        dump($appointment);
+        dump(count($appointment->getSchedules()));
+        dump($appointment->getSchedules());
+
+        return $this->render('Appointment/edit.html.twig',array(
+            'appointment'      => $appointment,
+            'form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        );
+        ));
     }
 
     /**

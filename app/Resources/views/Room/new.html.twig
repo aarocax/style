@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block pageTitle %}
+    <div class="row">
+        <div class="col-md-12"><h2>Rooms</h2></div>
+    </div>
+    <hr />
+{% endblock %}
+
+{% block main %}
+	<div class="row">
+        <div class="col-md-12">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    New Customer
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                    	<form action="{{ path('room_new') }}" method="post" {{ form_enctype(form) }}>
+                    		<div class="form-group">
+	                    		{{ form_label(form.name) }}
+	                    		{{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.name) }}
+	                    	</div>
+	                    	<div class="form-group">
+	                    		{{ form_label(form.description) }}
+	                    		{{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+	                    		{{ form_errors(form.description) }}
+	                    	</div>
+	                    	
+	                    	{{ form_widget(form.submit, {'attr': {'class': 'btn btn-default'}}) }}
+	                    	{{ form_rest(form) }}
+	                    	<a href="{{ path('room') }}" class="btn btn-default">Back to the list</a>
+                    	</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

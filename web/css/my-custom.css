@@ -1,0 +1,23 @@
+.calendar-buttons { 
+	background: #21771C;
+	padding: 0px;
+	color: #FFFFFF;
+	border: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+.calendar-buttons-pass { 
+	background: #76A373;
+}
+.appointment { 
+	background: #FF0000;
+	font-size: 0.6em;
+}
+.appointment-pass { 
+	background: #FFAE00;
+	font-size: 0.6em;
+}
+.td-calendar > tbody > tr > td {
+	padding: 2px;
+}

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -33,6 +34,22 @@ class ScheduleController extends Controller
         return $this->render('Schedule/index.html.twig', array('schedules' => $schedules));
     }
 
+    
+    /**
+     * Displays schedules of day.
+     *
+     * @Route("/schedules-of-day", name="schedules-of-day")
+     * @Method({"GET", "POST"})
+     */
+    public function getSchedulesOfDayAction(Request $request)
+    {
+        $date = $request->query->get('date', null);
+        $em = $this->getDoctrine()->getManager();
+        $schedules = $em->getRepository('AppBundle:Schedule')->getSchedulesOfDay($date);
+        return new JsonResponse($schedules);
+
+    }
+
     /**
      * Displays a form to create and persist a new Schedule entity.
      *
@@ -54,6 +71,28 @@ class ScheduleController extends Controller
 
         return $this->render('Schedule/new.html.twig', array('schedule' => $schedule, 'form'   => $form->createView()));
     }
+
+    /**
+     * Verify if exist any schedule at same time.
+     *
+     * @Route("/exist-schedule-startHour", name="exist-schedule-startHour")
+     * @Method({"GET", "POST"})
+     */
+    public function existScheduleStartHour(Request $request) {
+        $startTime = $request->query->get('st', null);
+        $endTime = $request->query->get('et', null);
+        $room = $request->query->get('room', null);
+        $scheduleDate = $request->query->get('scheduleDate', null);
+
+        $customers = array('room'=>$room, 'scheduleDate'=> $scheduleDate, 'startTime'=>$startTime, 'endTime'=>$endTime);
+        //ld($customers);
+
+        $em = $this->getDoctrine()->getManager();
+        $schedules = $em->getRepository('AppBundle:Schedule')->existScheduleStartHour($room, $scheduleDate, $startTime, $endTime);
+        return new JsonResponse($schedules);
+    }
+
+    
 
     
 

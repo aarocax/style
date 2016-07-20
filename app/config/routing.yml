@@ -8,3 +8,4 @@ homepage:
     defaults:
         _controller: FrameworkBundle:Template:template
         template:    'default/index.html.twig'
+

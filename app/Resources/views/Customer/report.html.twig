@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+
+{% block pageTitle %}
+    <div class="row">
+        <div class="col-md-12"><h2>Customer</h2></div>
+    </div>
+    <hr />
+{% endblock %}
+
+{% block main %}
+<div class="row">
+  <div class="col-md-12">  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+          Customer report
+      </div>
+      <div class="panel-body">
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Lastname</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Date</th>
+              </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ customer.id }}</td>
+              <td>{{ customer.name }}</td>
+              <td>{{ customer.lastName }}</td>
+              <td>{{ customer.address }}</td>
+              <td>{{ customer.phone }}</td>
+              <td>{{ customer.date|date('d-m-Y') }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <hr>
+
+        <ul class="nav nav-tabs">
+          <li role="presentation"><a href="#uno" data-toggle="tab">Schedules</a></li>
+          <li role="presentation"><a href='#dos' data-toggle="tab">Services</a></li>
+          <li role="presentation"><a href='#tres' data-toggle="tab">Tres</a></li>
+        </ul>
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane fade in active" id="uno" aria-labelledby="home-tab">
+            <table class="table table-condensed">
+              <thead>
+                <tr>
+                  <th>App. Id</th>
+                  <th>Sch. Id</th>
+                  <th>Date</th>
+                  <th>Service</th>
+                  <th>Room</th>
+                  <th>Price</th>
+                  <th>S. off</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for schedule in schedules %}
+                  <tr>
+                    <td>{{ schedule.appointment }}</td>
+                    <td>{{ schedule.id }}</td>
+                    <td>{{ schedule.scheduleDate|date('d-m-Y') }}</td>
+                    <td>{{ schedule.service }}</td>
+                    <td>{{ schedule.room }}</td>
+                    <td>{{ schedule.price }} €</td>
+                    <td>{{ schedule.discount }}</td>
+                    <td>{{ schedule.price - (schedule.price * (schedule.discount / 100)) }} €</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div role="tabpanel" class="tab-pane fade in active" id="dos" aria-labelledby="home-tab">
+            <table class="table table-condensed">
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Times</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for schedule in schedules2 %}
+                  <tr>
+                    <td>{{ schedule.service }}</td>
+                    <td>{{ schedule.counter }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div role="tabpanel" class="tab-pane fade in active" id="tres" aria-labelledby="home-tab"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-12"><h3>Schedules</h3></div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            
+          </div>
+        </div>
+        <ul class="record_actions">
+            <li>
+                <a href="{{ path('customer') }}">
+                    Back to the list
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('customer_edit', { 'id': customer.id }) }}">
+                    Edit
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('customer_get_schedules', { 'id': customer.id }) }}">
+                    See all Schedules
+                </a>
+            </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

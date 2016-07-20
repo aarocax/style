@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class StaffControllerTest extends WebTestCase
 {
-    /*
+    
     public function testCompleteScenario()
     {
         // Create a new client to browse the application
@@ -19,7 +19,9 @@ class StaffControllerTest extends WebTestCase
 
         // Fill in the form and submit it
         $form = $crawler->selectButton('Create')->form(array(
-            'appbundle_staff[field_name]'  => 'Test',
+            'appbundle_staff[name]'  => 'Test',
+            'appbundle_staff[lastName]'  => 'Test Lastaname',
+            'appbundle_staff[phone]'  => '647422325',
             // ... other fields to fill
         ));
 
@@ -33,14 +35,14 @@ class StaffControllerTest extends WebTestCase
         $crawler = $client->click($crawler->selectLink('Edit')->link());
 
         $form = $crawler->selectButton('Update')->form(array(
-            'appbundle_staff[field_name]'  => 'Foo',
+            'appbundle_staff[name]'  => 'Foo',
             // ... other fields to fill
         ));
 
         $client->submit($form);
         $crawler = $client->followRedirect();
 
-        // Check the element contains an attribute with value equals "Foo"
+        Check the element contains an attribute with value equals "Foo"
         $this->assertGreaterThan(0, $crawler->filter('[value="Foo"]')->count(), 'Missing element [value="Foo"]');
 
         // Delete the entity
@@ -51,5 +53,5 @@ class StaffControllerTest extends WebTestCase
         $this->assertNotRegExp('/Foo/', $client->getResponse()->getContent());
     }
 
-    */
+    
 }

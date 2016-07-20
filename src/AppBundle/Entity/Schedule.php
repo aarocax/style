@@ -50,6 +50,13 @@ class Schedule
     private $finishHour;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="price", type="float")
+     */
+    private $price;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Service", inversedBy="schedules")
      * @ORM\JoinColumn(name="service_id", referencedColumnName="id")
      */
@@ -302,6 +309,29 @@ class Schedule
     public function getAppointment()
     {
         return $this->appointment;
+    }
+
+    /**
+     * Set price
+     *
+     * @param float $price
+     * @return Schedule
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return float 
+     */
+    public function getPrice()
+    {
+        return $this->price;
     }
 
 }

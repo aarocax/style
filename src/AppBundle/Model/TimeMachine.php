@@ -47,19 +47,31 @@ class TimeMachine
     */ 
 	public static function roundMinutes($now)
 	{
-        $now['minutes']%15;
-        $minutes = $now['minutes'] - $now['minutes']%15;
-       
-         //redondeo en intérvalos de 15min, al alza
-        $rmin  = $now['minutes']%15;
-        $minutes = $now['minutes'] + $rmin;
-        return date('H:i',strtotime($now['hours'].":".$minutes));
+    
+    if ($now['minutes']%15 === 0) {
+      $minutes = $now['minutes'];          
+    } else {
+      if ($now['minutes'] > 0 && $now['minutes'] < 15) {
+        $minutes = 15;
+      }
+      if ($now['minutes'] > 15 && $now['minutes'] < 30) {
+        $minutes = 30;
+      }
+      if ($now['minutes'] > 30 && $now['minutes'] < 45) {
+        $minutes = 45;
+      }
+      if ($now['minutes'] > 45) {
+        $now['hours'] = $now['hours'] + 1;
+        $minutes = 0;
+      }
     }
+    return date('H:i',strtotime($now['hours'].":".$minutes));
+  }
 
-    public static function arrayIntervaloHoras($inicial, $final){
+    public static function arrayIntervaloHoras($inicial, $final, $interval){
         $horaInicial=$inicial;
         $horaFinal=$final;
-        $minutoAnadir=15;
+        $minutoAnadir=$interval;
         while ( $horaInicial != $horaFinal) {
             $horas[] = $horaInicial; 
             $segundos_horaInicial=strtotime($horaInicial);
@@ -70,9 +82,9 @@ class TimeMachine
         return $horas;
     }
 
-    public static function arrayHoras(){
+    public static function arrayHoras($interval){
         $horaInicial="08:00";
-        $minutoAnadir=15;
+        $minutoAnadir=$interval;
         for ($i=0; $i < 56; $i++) { 
             $horas[$horaInicial] = array('horaCita'=>$horaInicial,'nombreCita'=>null,'idCita'=>null);
             $segundos_horaInicial=strtotime($horaInicial);

@@ -37,4 +37,58 @@ class CustomerRepository extends EntityRepository
 
         return $query->getSingleResult();
     }
+
+    public function getSchedules($customer_id)
+    {
+        $query = $this->getEntityManager()->createQuery("
+            SELECT s.id as id,
+                   s.scheduleDate as scheduleDate,
+                   s.startingHour as startingHour,
+                   s.finishHour as finishHour,
+                   s.price as price,
+                   s.discount as discount,
+                   r.name as room,
+                   sv.name as service,
+                   a.id as appointment,
+                   c.id as customerId,
+                   c.name as name,
+                   c.lastName as lastName
+            FROM AppBundle:Schedule s
+            JOIN s.room r
+            JOIN s.service sv
+            JOIN s.appointment a
+            JOIN a.customer c
+            WHERE a.customer = :customer_id
+            ORDER BY s.id
+            ")->setParameter('customer_id', $customer_id);
+
+        return $query->getResult();
+
+        //return $customers;
+    }
+
+    public function getSchedulesGroupByServices($customer_id)
+    {
+        $query = $this->getEntityManager()->createQuery("
+            SELECT s.id as id,
+                   sv.name as service,
+                   count(sv.id) as counter,
+                   a.id as appointment,
+                   c.id as customerId,
+                   c.name as name,
+                   c.lastName as lastName
+            FROM AppBundle:Schedule s
+            JOIN s.room r
+            JOIN s.service sv
+            JOIN s.appointment a
+            JOIN a.customer c
+            WHERE a.customer = :customer_id
+            GROUP BY s.service
+            ORDER BY counter DESC
+            ")->setParameter('customer_id', $customer_id);
+
+        return $query->getResult();
+
+        //return $customers;
+    }
 }

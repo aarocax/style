@@ -12,4 +12,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class AppointmentRepository extends EntityRepository
 {
+	public function getAppointmentsOfDay($date = null)
+    {
+      (is_null($date)) ? $date = new \Datetime('now') : $date = new \Datetime($date);
+      $date = $date->format('Y-m-d').' 00:00:00';
+
+      $query = $this->getEntityManager()->createQuery("
+      	SELECT  a, s, c, sv, stf, r
+				FROM AppBundle:Appointment a
+				JOIN a.schedules s
+				JOIN a.customer c
+				JOIN s.service sv
+				JOIN s.staff stf
+				JOIN s.room r
+				WHERE s.scheduleDate = :date
+      	")
+      ->setParameter('date', $date);
+
+      return $query->getArrayResult();
+    }
 }

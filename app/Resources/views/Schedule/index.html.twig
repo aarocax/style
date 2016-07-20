@@ -31,7 +31,6 @@
                                     <th>Startinghour</th>
                                     <th>Finishhour</th>
                                     <th>Service</th>
-                                    <th>Sendemail</th>
                                     <th>Discount</th>
                                     <th>Actions</th>
                                 </tr>
@@ -45,7 +44,6 @@
                                     <td>{{ schedule.startingHour|date('H:i:s') }}</td>
                                     <td>{{ schedule.finishHour|date('H:i:s') }}</td>
                                     <td>{{ schedule.service }}</td>
-                                    <td>{{ schedule.sendEmail }}</td>
                                     <td>{{ schedule.discount }}</td>
                                     <td>
                                         <a href="{{ path('schedule_show', { 'id': schedule.id }) }}"><i class="fa fa-search fa-fw"></i></a>
