@@ -34,7 +34,6 @@ class ScheduleController extends Controller
         return $this->render('Schedule/index.html.twig', array('schedules' => $schedules));
     }
 
-    
     /**
      * Displays schedules of day.
      *
@@ -84,16 +83,31 @@ class ScheduleController extends Controller
         $room = $request->query->get('room', null);
         $scheduleDate = $request->query->get('scheduleDate', null);
 
-        $customers = array('room'=>$room, 'scheduleDate'=> $scheduleDate, 'startTime'=>$startTime, 'endTime'=>$endTime);
-        //ld($customers);
-
         $em = $this->getDoctrine()->getManager();
         $schedules = $em->getRepository('AppBundle:Schedule')->existScheduleStartHour($room, $scheduleDate, $startTime, $endTime);
         return new JsonResponse($schedules);
     }
 
     
+    /**
+     * Verify if exist any schedule at same time.
+     *
+     * @Route("/exist-schedule-finishHour", name="exist-schedule-finishHour")
+     * @Method({"GET", "POST"})
+     */
+    public function existScheduleFinishHour(Request $request) {
+        $startTime = $request->query->get('st', null);
+        $endTime = $request->query->get('et', null);
+        $room = $request->query->get('room', null);
+        $scheduleDate = $request->query->get('scheduleDate', null);
 
+        $customers = array('room'=>$room, 'scheduleDate'=> $scheduleDate, 'startTime'=>$startTime, 'endTime'=>$endTime);
+        //ld($customers);
+
+        $em = $this->getDoctrine()->getManager();
+        $schedules = $em->getRepository('AppBundle:Schedule')->existScheduleFinishHour($room, $scheduleDate, $startTime, $endTime);
+        return new JsonResponse($schedules);
+    }
     
 
     /**

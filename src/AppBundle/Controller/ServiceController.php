@@ -35,6 +35,22 @@ class ServiceController extends Controller
     }
 
     /**
+     * Get a Service entity.
+     *
+     * @Route("/get-service-by-id/{id}", requirements={"id" = "\d+"}, name="service_by_id")
+     * @Method("GET")
+     */
+    public function getServiceByIdAction(Service $service)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $result = $em->getRepository('AppBundle:Service')->find($service->getId());
+        
+        return new JsonResponse(array('name' => $result->getName()));
+
+    }
+
+    /**
      * Displays a form to create and persist a new Service entity.
      *
      * @Route("/new", name="service_new")

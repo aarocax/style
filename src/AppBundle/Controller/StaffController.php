@@ -33,6 +33,22 @@ class StaffController extends Controller
     }
 
     /**
+     * Finds and a Satff entity.
+     *
+     * @Route("/get-staff-by-id/{id}", requirements={"id" = "\d+"}, name="staff_by_id")
+     * @Method("GET")
+     */
+    public function getStaffByIdAction(Staff $staff)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $result = $em->getRepository('AppBundle:Staff')->find($staff->getId());
+        
+        return new JsonResponse(array('name' => $result->getName(), 'lastName' =>  $result->getLastName()));
+
+    }
+
+    /**
      * Displays a form to create and persist a new Staff entity.
      *
      * @Route("/new", name="staff_new")

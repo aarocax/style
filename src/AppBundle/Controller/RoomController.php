@@ -58,6 +58,19 @@ class RoomController extends Controller
     }
 
     /**
+     * Finds and a Room entity.
+     *
+     * @Route("/get-room-by-id/{id}", requirements={"id" = "\d+"}, name="room_by_id")
+     * @Method("GET")
+     */
+    public function getRoomByIdAction(Room $room)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $result = $em->getRepository('AppBundle:Room')->find($room->getId());
+        return new JsonResponse(array('name' => $result->getName()));
+    }
+
+    /**
      * Creates a form to create a Room entity.
      *
      * @param Room $entity The entity
