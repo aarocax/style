@@ -1,0 +1,300 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+{% block pageTitle %}
+    <div class="row">
+        <div class="col-md-12"><h2>Appointments</h2></div>
+    </div>
+    <hr />
+{% endblock %}
+
+{# personalizamos como se mostrará cada schedule #}
+{% form_theme form _self %}
+
+{% block _appbundle_appointment_schedules_entry_row %}
+{% spaceless %}
+    <div class="col-md-12 well schedule">
+        <div class="row">
+            <button type="button" id="appbundle_appointment_schedules___name___index" class="close" ><i class="fa fa-times" aria-hidden="true"></i></button>
+        </div>
+        <div id="message" class="row"></div>
+        <div class="row">
+            {{ form_widget(form.scheduleDate, { 'attr': {'value' : "now"|date("Y-m-d"), 'style' : 'display:none;' }} ) }}
+            {{ form_widget(form.service) }} {# campo oculto que se rellena con el autocomplete#}
+            {{ form_widget(form.staff) }} {# campo oculto que se rellena con el autocomplete#}
+            {{ form_widget(form.room) }} {# campo oculto que se rellena con el autocomplete#}
+            <div class="form-group col-md-3">
+                {{ form_label(form.services) }}
+                {{ form_widget(form.services) }} {# campo autocomplete#}
+                {{ form_errors(form.service) }}
+            </div>
+            <div class="form-group col-md-3">
+                {{ form_label(form.staffs) }}
+                {{ form_widget(form.staffs) }} {# campo autocomplete#}
+                {{ form_errors(form.staff) }}
+            </div>
+            <div class="form-group col-md-3">
+                {{ form_label(form.rooms) }}
+                {{ form_widget(form.rooms) }} {# campo autocomplete#}
+                {{ form_errors(form.room) }}
+            </div>
+            <div class="form-group col-md-3">
+                <div class="form-group col-md-6">
+                    {{ form_label(form.startingHour) }}    
+                    {{ form_widget(form.startingHour) }}
+                    {{ form_errors(form.startingHour) }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form_label(form.finishHour) }}
+                    {{ form_widget(form.finishHour) }}
+                    {{ form_errors(form.finishHour) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="form-group col-md-3">
+                {{ form_label(form.discount) }}
+                {{ form_widget(form.discount) }}
+                {{ form_errors(form.discount) }}
+            </div>
+            <div class="form-group col-md-3">
+                {{ form_label(form.price) }}
+                {{ form_widget(form.price) }}
+                {{ form_errors(form.price) }}
+            </div>
+        </div>
+        <div id="appbundle_appointment_schedules___name___precioInicial" style="display: none;"></div>
+        <div id="appbundle_appointment_schedules___name___precioBeforeChange" style="display: none;"></div>
+        <div id="appbundle_appointment_schedules___name___scheduleTime" style="display: none;"></div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+
+{% block main %}
+	<div class="row">
+    <div class="col-md-12">
+      <!-- Advanced Tables -->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+            New Appointment
+        </div>
+        <div class="panel-body">
+          <div class="col-md-12">
+          	<form action="{{ path('appointment_new') }}" method="post" {{ form_enctype(form) }}>
+          		<div class="row">
+                <div class="form-group col-md-6">
+                    <label class="required">Customer</label>
+                    <input type="text" data-id="appbundle_appointment_customer"  name="select_customer[customer]" data-url="{{ path('customer_get') }}" tabindex="0" class="form-control autocomplete" value="{{ form.vars.data.lastname|default('') }}">
+                </div>
+                <div class="form-group col-md-2">
+                    {{ form_label(form.appointmentDate) }}
+                    {{ form_widget(form.appointmentDate, { 'attr': {'tabindex' : 1, 'value': date|date('Y-m-d'), 'class':'form-control input-sm'  } }) }}
+                    {{ form_errors(form.appointmentDate) }}
+                </div>
+                <div class="form-group col-md-2">
+                  <label for="appbundle_appointment_appointmentDate" class="required">Time</label>
+                  <br>
+                  <span id="appointmentHour">{{ time|date('H:i:s') }}</span>
+                </div>
+                <div class="form-group col-md-2">
+                  <label for="appointmentRoom" class="required">Sala</label>
+                  <br>
+                  <span id="appointmentRoom">{{ room }}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-2">
+                    {{ form_label(form.debt) }}
+                    {{ form_widget(form.debt, { 'attr': {'tabindex' : 2, 'class':'form-control input-sm'  } }) }}
+                    {{ form_errors(form.debt) }}
+                </div>
+                <div class="form-group col-md-1">
+                    {{ form_label(form.paid) }}
+                    {{ form_widget(form.paid, { 'attr': {'tabindex' : 3, 'class':'form-control input-sm'}} ) }}
+                    {{ form_errors(form.paid) }}
+                </div>
+              </div>    
+              <div class="row">
+                <br>
+                <div class="boton-add"></div>
+                <hr>
+                {{ form_rest(form) }}
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  <span for="totalPrice"><strong>Final Price:</strong> <span class="text-left" id="totalPrice" name="totalPrice">0</span><span> €</span></span>
+                </div>
+              </div>
+              <hr>
+            	<div class="row">
+                <button type="submit" name="enviar" class="btn btn-success">Enviar</button>
+                	{# {{ form_widget(form.submit, {'attr': {'class': 'btn btn-default'}}) }} #}
+                <a href="{{ path('appointment') }}" class="btn btn-default">Back to the list</a>
+              </div>
+                  
+          	</form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  {# <script src="{{ asset('bundles/app/js/new.js') }}"></script> #}
+  <script>
+    function initializeMainForm() {
+      $('.autocomplete').each(function(i, el) {
+          var $this = $(el);
+          $this.autocomplete({
+              source: $this.data('url'),
+              minLength: 1,
+              select: function( event, ui ) {
+                  $('#' + $this.data('id')).val(ui.item.id);
+                  event.preventDefault();
+                  this.value = ui.item.label+ ' ' +ui.item.lastName;
+              }
+          });
+          $this.autocomplete( "instance" )._renderItem = function( ul, item ) {
+            return $( "<li>" )
+              .append( "<a>" + item.label + " " + item.lastName + "</a>" )
+              .appendTo( ul );
+          };
+      });
+    }
+
+    function initializeSchedulesForm() {
+      // Get the div that holds the collection of addresses
+      var collectionHolder = $('div.schedules');
+
+      // setup an "add a schedule" link
+      var $newLinkLi = $('<a href="#" id="botton-add" class="btn btn-xs btn-info add_schedule_link"><i class="glyphicon glyphicon-plus glyphicon-white"></i> Añadir un schedule</a>');
+
+      // get date of appointment
+      var $fecha = document.getElementById('appbundle_appointment_appointmentDate').value;
+
+      // add the "add a schedule" anchor and li to the addresses div
+      //collectionHolder.parent().append($newLinkLi);
+      $(".boton-add").append($newLinkLi);
+
+      // count the current form inputs we have (e.g. 2), use that as the new
+      // index when inserting a new item (e.g. 2)
+      collectionHolder.data('index', collectionHolder.find(':input').length);
+
+      // Cuando pulsamos nuevo schedule
+      $newLinkLi.on('click', function(e) {
+        // add a new form (see next code block)
+        addNewScheduleForm(collectionHolder, $fecha, e);
+        // Inicializa los campos autocomplete del nuevo schedule
+        //initializeAutocompleteFields(e);
+        // cuando se ñade un servicio se deshabilita el botón de añadir más hasta que este no tiene un servicio
+      //document.getElementById('botton-add').style.pointerEvents = 'none';
+      });
+
+      // Cuando eliminamos un formulario de schedule
+      $(document).on('click', '.close', function(){
+        $(this).closest('.schedule').fadeOut(0, function() {
+            $(this).remove();
+        });
+      });
+    }
+
+    function formulario(collectionHolder, $fecha, e){
+      this.prototype = collectionHolder.data('prototype');
+      this.index = collectionHolder.data('index');
+      this.newForm = this.prototype.replace(/__name__/g, this.index);
+      this.date = $fecha;
+      this.discount = 0;
+      this.price = 0;
+      // Display the form in the page in an li, before the "Add a schedule" link li
+      this.newFormLi = $('<div id="schedule_'+this.index+'_box"></div>').append(this.newForm);
+
+      // increase the index with one for the next item
+      collectionHolder.data('index', this.index + 1);
+
+
+      initializeAutoCompleteService(e);
+            
+      
+      function initializeAutoCompleteService(e) {
+        $('.autocompleteservice').each(function(i, el) {
+            console.log('hola');
+            var $this = $(el);
+            $this.autocomplete({
+                source: $this.data('url'),
+                minLength: 1,
+                select: function( event, ui ) {
+
+                    $('#' + $this.data('id')).val(ui.item.id);
+                    //var id = index;
+                    //$hour = calculateHour(ui.item.time, id);
+
+                    // pone la hora de inicio y fin en el schedule
+                    //calculateHour(ui.item.time, id);
+                    
+                    //document.getElementById("appbundle_appointment_schedules_"+id+"_price").value = ui.item.price;
+                    //document.getElementById("appbundle_appointment_schedules_"+id+"_precioInicial").innerHTML = ui.item.price;
+                    //document.getElementById("appbundle_appointment_schedules_"+id+"_precioBeforeChange").innerHTML = 0;
+                    //document.getElementById("appbundle_appointment_schedules_"+id+"_scheduleTime").innerHTML = ui.item.time;
+                    
+                    // actualizamos el precio total
+                    //$('#appbundle_appointment_schedules_'+id+'_price').trigger("change");
+
+                    // cuando se pone un servicio se habilita el botón para añadir más schedules
+                    //document.getElementById('botton-add').style.pointerEvents = 'auto';
+                }
+            });
+        });
+      }
+
+      this.showForm = function() {
+        collectionHolder.append(this.newFormLi);
+        this.setValuesInForm();
+      }
+
+      this.setValuesInForm = function() {
+        //document.getElementById('appbundle_appointment_schedules_'+this.index+'_scheduleDate').value = this.date;
+        document.getElementById('appbundle_appointment_schedules_'+this.index+'_discount').value = this.discount;
+        document.getElementById('appbundle_appointment_schedules_'+this.index+'_price').value = this.price;
+      }
+
+      this.setPrice = function($price) {
+        this.price = $price;
+      }
+
+      this.setDiscount = function($discount) {
+        this.discount = $discount;
+      }
+
+      this.setDate = function($date) {
+        this.date = $date;
+      }
+    }
+
+    function addNewScheduleForm(collectionHolder, $fecha, e) {
+      $index = collectionHolder.data('index');
+      $form = new formulario(collectionHolder, $fecha, e);
+      $formularios[$index] = $form;
+      $form.showForm();
+      console.log($formularios);
+      console.log($form.index);
+      console.log($form.newForm);
+    }
+
+    function AppLoad() {
+      initializeMainForm();
+      initializeSchedulesForm();
+    }
+
+    var $formularios = new Array();  
+    window.addEventListener('load', AppLoad, false);
+  </script>
+{% endblock %}

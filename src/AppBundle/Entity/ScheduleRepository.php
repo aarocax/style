@@ -35,7 +35,6 @@ class ScheduleRepository extends EntityRepository
         ->setParameter('room_id', $rId);
 
         return $query->getResult();
-
   }
 
   public function existScheduleFinishHour($rId, $sDate, $sTime, $eTime)
@@ -61,98 +60,121 @@ class ScheduleRepository extends EntityRepository
         ->setParameter('room_id', $rId);
 
         return $query->getResult();
+  }
 
+  public function existScheduleInThisHour($rId, $sDate, $sTime, $eTime)
+  {
+    $schDate = new \Datetime($sDate);
+    $query = $this->getEntityManager()->createQuery("
+            SELECT s.id as id,
+                   s.scheduleDate as scheduleD,
+                   s.startingHour as startingHour,
+                   s.finishHour as finishHour,
+                   r.id as room_id
+            FROM AppBundle:Schedule s
+            JOIN s.room r
+            WHERE s.scheduleDate = :scheduleDate
+            AND s.room = :room_id
+            AND s.startingHour >= :startTime
+            AND s.startingHour < :finishTime
+            ")
+        ->setParameter('scheduleDate', $sDate)
+        ->setParameter('startTime', $sTime)
+        ->setParameter('finishTime', $eTime)
+        ->setParameter('room_id', $rId);
+
+        return $query->getResult();
   }
 
 	public function getRoomsSchedulesWeek($firstDayOfWeek, $lastDayOfWeek, $room_id)
-    {
-        (is_null($firstDayOfWeek)) ? $date = new \Datetime : null;
-        (is_null($lastDayOfWeek)) ? $date = new \Datetime : null;
-        $query = $this->getEntityManager()->createQuery("
-            SELECT s.id as id,
-                   s.scheduleDate as scheduleDate,
-                   s.startingHour as startingHour,
-                   s.finishHour as finishHour,
-                   r.description as room,
-                   sv.description as service,
-                   stf.name as staff,
-                   a.id as appointment,
-                   c.name as name,
-                   c.lastName as lastName
-            FROM AppBundle:Schedule s
-            JOIN s.room r
-            JOIN s.service sv
-            JOIN s.appointment a
-            JOIN a.customer c
-            LEFT JOIN s.staff stf
-            WHERE s.scheduleDate >= :monday
-            AND s.scheduleDate <= :sunday
-            AND s.room = :room_id")
-        ->setParameter('monday', $firstDayOfWeek)
-        ->setParameter('sunday', $lastDayOfWeek)
-        ->setParameter('room_id', $room_id);
+  {
+      (is_null($firstDayOfWeek)) ? $date = new \Datetime : null;
+      (is_null($lastDayOfWeek)) ? $date = new \Datetime : null;
+      $query = $this->getEntityManager()->createQuery("
+          SELECT s.id as id,
+                 s.scheduleDate as scheduleDate,
+                 s.startingHour as startingHour,
+                 s.finishHour as finishHour,
+                 r.description as room,
+                 sv.description as service,
+                 stf.name as staff,
+                 a.id as appointment,
+                 c.name as name,
+                 c.lastName as lastName
+          FROM AppBundle:Schedule s
+          JOIN s.room r
+          JOIN s.service sv
+          JOIN s.appointment a
+          JOIN a.customer c
+          LEFT JOIN s.staff stf
+          WHERE s.scheduleDate >= :monday
+          AND s.scheduleDate <= :sunday
+          AND s.room = :room_id")
+      ->setParameter('monday', $firstDayOfWeek)
+      ->setParameter('sunday', $lastDayOfWeek)
+      ->setParameter('room_id', $room_id);
 
-        return $query->getResult();
-    }
+      return $query->getResult();
+  }
 
-    public function getSchedulesPresentDay($date, $room_id)
-    {
-        (is_null($date)) ? $date = new \Datetime : null;
-        $query = $this->getEntityManager()->createQuery("
-            SELECT s.id as id,
-                   s.scheduleDate as scheduleDate,
-                   s.startingHour as startingHour,
-                   s.finishHour as finishHour,
-                   r.description as room,
-                   sv.description as service,
-                   stf.name as staff,
-                   a.id as appointment,
-                   c.name as name,
-                   c.lastName as lastName
-            FROM AppBundle:Schedule s
-            JOIN s.room r
-            JOIN s.service sv
-            JOIN s.appointment a
-            JOIN a.customer c
-            LEFT JOIN s.staff stf
-            WHERE s.scheduleDate = :date
-            AND s.room = :room_id")
-        ->setParameter('date', $date)
-        ->setParameter('room_id', $room_id);
+  public function getSchedulesPresentDay($date, $room_id)
+  {
+      (is_null($date)) ? $date = new \Datetime : null;
+      $query = $this->getEntityManager()->createQuery("
+          SELECT s.id as id,
+                 s.scheduleDate as scheduleDate,
+                 s.startingHour as startingHour,
+                 s.finishHour as finishHour,
+                 r.description as room,
+                 sv.description as service,
+                 stf.name as staff,
+                 a.id as appointment,
+                 c.name as name,
+                 c.lastName as lastName
+          FROM AppBundle:Schedule s
+          JOIN s.room r
+          JOIN s.service sv
+          JOIN s.appointment a
+          JOIN a.customer c
+          LEFT JOIN s.staff stf
+          WHERE s.scheduleDate = :date
+          AND s.room = :room_id")
+      ->setParameter('date', $date)
+      ->setParameter('room_id', $room_id);
 
-        return $query->getResult();
-    }
+      return $query->getResult();
+  }
 
-    public function getSchedulesOfDay($date = null)
-    {
-        (is_null($date)) ? $date = new \Datetime('now') : $date = new \Datetime($date);
-        $date = $date->format('Y-m-d').' 00:00:00';
-        
-        $query = $this->getEntityManager()->createQuery("
-            SELECT s.id as id,
-                   s.scheduleDate as scheduleDate,
-                   s.startingHour as startingHour,
-                   s.finishHour as finishHour,
-                   s.price as price,
-                   s.discount as discount,
-                   r.name as roomName,
-                   sv.name as serviceName,
-                   stf.name as staff,
-                   a.id as appointment,
-                   a.paid as paid,
-                   a.debt as debt,
-                   c.name as name,
-                   c.lastName as lastName
-            FROM AppBundle:Schedule s
-            JOIN s.room r
-            JOIN s.service sv
-            JOIN s.appointment a
-            JOIN a.customer c
-            LEFT JOIN s.staff stf
-            WHERE s.scheduleDate = :date
-            ")
-        ->setParameter('date', $date);
+  public function getSchedulesOfDay($date = null)
+  {
+      (is_null($date)) ? $date = new \Datetime('now') : $date = new \Datetime($date);
+      $date = $date->format('Y-m-d').' 00:00:00';
+      
+      $query = $this->getEntityManager()->createQuery("
+          SELECT s.id as id,
+                 s.scheduleDate as scheduleDate,
+                 s.startingHour as startingHour,
+                 s.finishHour as finishHour,
+                 s.price as price,
+                 s.discount as discount,
+                 r.name as roomName,
+                 sv.name as serviceName,
+                 stf.name as staff,
+                 a.id as appointment,
+                 a.paid as paid,
+                 a.debt as debt,
+                 c.name as name,
+                 c.lastName as lastName
+          FROM AppBundle:Schedule s
+          JOIN s.room r
+          JOIN s.service sv
+          JOIN s.appointment a
+          JOIN a.customer c
+          LEFT JOIN s.staff stf
+          WHERE s.scheduleDate = :date
+          ")
+      ->setParameter('date', $date);
 
-        return $query->getResult();
-    }
+      return $query->getResult();
+  }
 }

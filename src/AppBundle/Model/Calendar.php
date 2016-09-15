@@ -77,8 +77,8 @@ class Calendar
             $calendar['salas'][$room->getName()]['semana'] = $semana;
             $calendar['salas'][$room->getName()]['id'] = $room->getId();
 
-            //llemanos el array con los schedules del día para la vista resumen
         }
+
         return $calendar;
     }
 
@@ -109,16 +109,16 @@ class Calendar
             
             
             // Ojo, el redondeo de horas falla
-            //ld($h);
             $hr = TimeMachine::roundMinutes($h); // obtengo la hora inicio redondeada
             $hfr = TimeMachine::roundMinutes($hf); // obtengo la hora final redondeada
 
             $intervaloHoras = TimeMachine::arrayIntervaloHoras($hr, $hfr, $interval);
-
+ 
             $d = $diasSemana[date('N', strtotime($schedule['scheduleDate']->format('Y-m-d')))-1];
             foreach ($intervaloHoras as $value) {
                 $semana[$d][$value]['nombreCita']=$schedule['name']." ".$schedule['lastName'];
                 $semana[$d][$value]['idCita']=$schedule['id'];
+                $semana[$d][$value]['idAppointment']=$schedule['appointment'];
             }
             
         }

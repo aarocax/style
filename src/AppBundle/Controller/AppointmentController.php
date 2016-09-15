@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use AppBundle\Entity\Appointment;
 use AppBundle\Form\AppointmentType;
+use AppBundle\Entity\ScheduleRepository;
 
 /**
  * Appointment controller.
@@ -50,10 +51,28 @@ class AppointmentController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            // TODO Solo estoy cogiendo el primer schedule si hay más no lo estoy comprobando
+
+            // contar el número de schedules y hacer la comprobación por cada uno de ellos
+
+            $formulario = $form->getData();
+            $startTime = $formulario->getSchedules()->get('0')->getStartingHour()->format('H:i:s');
+            $endTime = $formulario->getSchedules()->get('0')->getFinishHour()->format('H:i:s');
+            $room = $formulario->getSchedules()->get('0')->getRoom()->getId();
+            $scheduleDate = $formulario->getSchedules()->get('0')->getScheduleDate()->format('Y-m-d');
+            
             $em = $this->getDoctrine()->getManager();
-            $em->persist($appointment);
-            $em->flush();
-            return $this->redirect($this->generateUrl('appointment_show', array('id' => $appointment->getId())));
+
+            // Verificamos que no hay schedules en esas horas
+            $schedules = $em->getRepository('AppBundle:Schedule')->existScheduleInThisHour($room, $scheduleDate, $startTime, $endTime);
+            
+            if (count($schedules) == 0) {
+                $em->persist($appointment);
+                $em->flush();
+                return $this->redirect($this->generateUrl('appointment_show', array('id' => $appointment->getId())));
+            }
+            
         }
 
         return $this->render('Appointment/new.html.twig', array(
@@ -125,17 +144,8 @@ class AppointmentController extends Controller
             $originalSchedules[] = $schedule;
         }
 
-        dump($originalSchedules);
-
         $editForm = $this->createEditForm($appointment);
         $deleteForm = $this->createDeleteForm($appointment);
-
-       
-
-
-        dump($appointment);
-        dump(count($appointment->getSchedules()));
-        dump($appointment->getSchedules());
 
         return $this->render('Appointment/edit.html.twig',array(
             'appointment'      => $appointment,

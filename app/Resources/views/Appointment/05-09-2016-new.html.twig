@@ -5,67 +5,73 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css">
 {% endblock %}
 
-{% block pageTitle %}Appointments{% endblock %}
+{% block pageTitle %}
+    <div class="row">
+        <div class="col-md-12"><h2>Appointments</h2></div>
+    </div>
+    <hr />
+{% endblock %}
 
 {# personalizamos como se mostrará cada schedule #}
 {% form_theme form _self %}
 
 {% block _appbundle_appointment_schedules_entry_row %}
 {% spaceless %}
-  <div class="col-md-12 well schedule">
-    <div class="row">
-      <button type="button" id="appbundle_appointment_schedules___name___index" class="close" ><i class="fa fa-times" aria-hidden="true"></i></button>
+    <div class="col-md-12 well schedule">
+        <div class="row">
+            <button type="button" id="appbundle_appointment_schedules___name___index" class="close" ><i class="fa fa-times" aria-hidden="true"></i></button>
+        </div>
+        <div id="message" class="row"></div>
+        <div class="row">
+            {{ form_widget(form.scheduleDate, { 'attr': {'value' : "now"|date("Y-m-d"), 'style' : 'display:none;' }} ) }}
+            {{ form_widget(form.service) }} {# campo oculto que se rellena con el autocomplete#}
+            {{ form_widget(form.staff) }} {# campo oculto que se rellena con el autocomplete#}
+            {{ form_widget(form.room) }} {# campo oculto que se rellena con el autocomplete#}
+            <div class="form-group col-md-3">
+                {{ form_label(form.services) }}
+                {{ form_widget(form.services) }} {# campo autocomplete#}
+                {{ form_errors(form.service) }}
+            </div>
+            <div class="form-group col-md-3">
+                {{ form_label(form.staffs) }}
+                {{ form_widget(form.staffs) }} {# campo autocomplete#}
+                {{ form_errors(form.staff) }}
+            </div>
+            <div class="form-group col-md-3">
+                {{ form_label(form.rooms) }}
+                {{ form_widget(form.rooms) }} {# campo autocomplete#}
+                {{ form_errors(form.room) }}
+            </div>
+            <div class="form-group col-md-3">
+                <div class="form-group col-md-6">
+                    {{ form_label(form.startingHour) }}    
+                    {{ form_widget(form.startingHour) }}
+                    {{ form_errors(form.startingHour) }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form_label(form.finishHour) }}
+                    {{ form_widget(form.finishHour) }}
+                    {{ form_errors(form.finishHour) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="form-group col-md-3">
+                {{ form_label(form.discount) }}
+                {{ form_widget(form.discount) }}
+                {{ form_errors(form.discount) }}
+            </div>
+            <div class="form-group col-md-3">
+                {{ form_label(form.price) }}
+                {{ form_widget(form.price) }}
+                {{ form_errors(form.price) }}
+            </div>
+        </div>
+        <div id="appbundle_appointment_schedules___name___precioInicial" style="display: none;"></div>
+        <div id="appbundle_appointment_schedules___name___precioBeforeChange" style="display: none;"></div>
+        <div id="appbundle_appointment_schedules___name___scheduleTime" style="display: none;"></div>
     </div>
-    <div id="message" class="row"></div>
-    <div class="row">
-      {{ form_widget(form.scheduleDate, { 'attr': {'value' : "now"|date("Y-m-d"), 'style' : 'display:none;' }} ) }}
-      {{ form_widget(form.service) }} {# campo oculto que se rellena con el autocomplete#}
-      {{ form_widget(form.staff) }} {# campo oculto que se rellena con el autocomplete#}
-      {{ form_widget(form.room) }} {# campo oculto que se rellena con el autocomplete#}
-      <div class="form-group col-md-2">
-          {{ form_label(form.services) }}
-          {{ form_widget(form.services) }} {# campo autocomplete#}
-          {{ form_errors(form.service) }}
-      </div>
-      <div class="form-group col-md-2">
-          {{ form_label(form.staffs) }}
-          {{ form_widget(form.staffs) }} {# campo autocomplete#}
-          {{ form_errors(form.staff) }}
-      </div>
-      <div class="form-group col-md-2">
-          {{ form_label(form.rooms) }}
-          {{ form_widget(form.rooms) }} {# campo autocomplete#}
-          {{ form_errors(form.room) }}
-      </div>
-      <div class="form-group col-md-3">
-          <div class="form-group col-md-6">
-              {{ form_label(form.startingHour) }}    
-              {{ form_widget(form.startingHour) }}
-              {{ form_errors(form.startingHour) }}
-          </div>
-          <div class="form-group col-md-6">
-              {{ form_label(form.finishHour) }}
-              {{ form_widget(form.finishHour) }}
-              {{ form_errors(form.finishHour) }}
-          </div>
-      </div>
-   
-    
-      <div class="form-group col-md-1">
-        {{ form_label(form.discount) }}
-        {{ form_widget(form.discount) }}
-        {{ form_errors(form.discount) }}
-      </div>
-      <div class="form-group col-md-1">
-        {{ form_label(form.price) }}
-        {{ form_widget(form.price) }}
-        {{ form_errors(form.price) }}
-      </div>
-    </div>
-    <div id="appbundle_appointment_schedules___name___precioInicial" style="display: none;"></div>
-    <div id="appbundle_appointment_schedules___name___precioBeforeChange" style="display: none;"></div>
-    <div id="appbundle_appointment_schedules___name___scheduleTime" style="display: none;"></div>
-  </div>
 {% endspaceless %}
 {% endblock %}
 
@@ -116,7 +122,7 @@
               </div>    
               <div class="row">
                 <br>
-                
+                <div class="boton-add"></div>
                 <hr>
                 {{ form_rest(form) }}
               </div>
@@ -127,19 +133,9 @@
               </div>
               <hr>
             	<div class="row">
-                
-                  <div class="col-md-6 boton-add">
-                    <a href="#" id="botton-add" class="btn btn-info add_schedule_link"><i class="glyphicon glyphicon-plus glyphicon-white"></i> Añadir un schedule</a>
-                  </div>
-                
-                
-                
-                  <div class="col-md-6 text-right">
-                    <button type="submit" name="enviar" class="btn btn-success">Enviar</button>
-                  	{# {{ form_widget(form.submit, {'attr': {'class': 'btn btn-default'}}) }} #}
-                    <a href="{{ path('appointment') }}" class="btn btn-default">Back to the list</a>
-                  </div>
-                
+                <button type="submit" name="enviar" class="btn btn-success">Enviar</button>
+                	{# {{ form_widget(form.submit, {'attr': {'class': 'btn btn-default'}}) }} #}
+                <a href="{{ path('appointment') }}" class="btn btn-default">Back to the list</a>
               </div>
                   
           	</form>
@@ -157,7 +153,6 @@
   <script>
 
     function initializeMainForm() {
-      console.log('initialize Main Form');
       $('.autocomplete').each(function(i, el) {
           var $this = $(el);
           $this.autocomplete({
@@ -178,23 +173,23 @@
     }
 
     function initializeSchedulesForm() {
-      console.log('initialize Schedules Form');
+
       // Get the div that holds the collection of addresses
       var collectionHolder = $('div.schedules');
 
       // setup an "add a schedule" link
-      //var $newLinkLi = $('');
+      var $newLinkLi = $('<a href="#" id="botton-add" class="btn btn-xs btn-info add_schedule_link"><i class="glyphicon glyphicon-plus glyphicon-white"></i> Añadir un schedule</a>');
 
       // add the "add a schedule" anchor and li to the addresses div
       //collectionHolder.parent().append($newLinkLi);
-      //$(".boton-add").append($newLinkLi);
+      $(".boton-add").append($newLinkLi);
 
       // count the current form inputs we have (e.g. 2), use that as the new
       // index when inserting a new item (e.g. 2)
       collectionHolder.data('index', collectionHolder.find(':input').length);
 
       // Cuando pulsamos nuevo schedule
-      $("#botton-add").on('click', function(e) {
+      $newLinkLi.on('click', function(e) {
         // add a new form (see next code block)
         addNewScheduleForm(collectionHolder);
         // Inicializa los campos autocomplete del nuevo schedule
@@ -213,7 +208,7 @@
 
     function addNewScheduleForm(collectionHolder) {
       
-      console.log('add new Schedules Form');
+      
       // Get the data-prototype explained earlier
       var prototype = collectionHolder.data('prototype');
       // get the new index
@@ -226,7 +221,6 @@
       // Display the form in the page in an li, before the "Add a schedule" link li
       var $newFormLi = $('<div id="schedule_'+index+'_box"></div>').append(newForm);
       collectionHolder.append($newFormLi);
-
       // Pone la fecha del appointment en cada schedule
       var fecha = document.getElementById('appbundle_appointment_appointmentDate').value;
       document.getElementById('appbundle_appointment_schedules_'+index+'_scheduleDate').value = fecha;
@@ -237,7 +231,7 @@
       //ponemos precio a 0
       document.getElementById('appbundle_appointment_schedules_'+index+'_price').value = 0;
 
-      console.log('Este es el array índices actual: '+indices);
+      console.log('Este es el array índices: '+indices);
       indices.push(index);
       console.log('añado el índice '+index+' al array índices: '+indices);
 
@@ -435,41 +429,38 @@
         var datos = { st: startTime, et : endTime, room: room, scheduleDate: scheduleDate} 
 
         $.ajax({
-          url: "http://localhost/style.local/web/app_dev.php/schedule/exist-schedule-inThisHour",
+          url: "http://localhost/style.local/web/app_dev.php/schedule/exist-schedule-startHour",
           type: 'GET',
           data: { st: startTime, et : endTime, room: room, scheduleDate: scheduleDate} ,
           context: document.body
         }).done(function( data ) {
             if (data.length == 0) {
-              console.log('se va por cero -> data length: '+data.length);
-              $('#schedule_'+id+'_box .well').css("background-color","#f5f5f5");
-              $('#schedule_message_'+id).remove();
+
             } else {
-              console.log('se va por NO cero -> data length: '+data.length);
-              $('#schedule_'+id+'_box .well').css("background-color","#C90000");
-              $('#schedule_'+id+'_box .well #message' ).append( "<span id='schedule_message_"+id+"'><h2>Esta hora cincide con ota cita en la start hour</h2></span>" );
-              $( '#schedule_'+id+'_box .well #message h2' ).css("color","#FFF");
+                $('#schedule_'+id+'_box .well').css("background-color","#C90000");
+                $( '#schedule_'+id+'_box .well #message' ).append( "<span><h2>Esta hora cincide con ota cita</h2></span>" );
+                $( '#schedule_'+id+'_box .well #message h2' ).css("color","#FFF");
             }
 
           
         });
 
-        // $.ajax({
-        //   url: "http://localhost/style.local/web/app_dev.php/schedule/exist-schedule-finishHour",
-        //   type: 'GET',
-        //   data: { st: startTime, et : endTime, room: room, scheduleDate: scheduleDate} ,
-        //   context: document.body
-        // }).done(function( data ) {
-        //     if (data.length == 0) {
+        $.ajax({
+          url: "http://localhost/style.local/web/app_dev.php/schedule/exist-schedule-finishHour",
+          type: 'GET',
+          data: { st: startTime, et : endTime, room: room, scheduleDate: scheduleDate} ,
+          context: document.body
+        }).done(function( data ) {
+            if (data.length == 0) {
 
-        //     } else {
-        //         $('#schedule_'+id+'_box .well').css("background-color","#C90000");
-        //         $( '#schedule_'+id+'_box .well #message' ).append( "<span><h2>Esta hora cincide con ota cita en la finish Hour</h2></span>" );
-        //         $( '#schedule_'+id+'_box .well #message h2' ).css("color","#FFF");
-        //     }
+            } else {
+                $('#schedule_'+id+'_box .well').css("background-color","#C90000");
+                $( '#schedule_'+id+'_box .well #message' ).append( "<span><h2>Esta hora cincide con ota cita</h2></span>" );
+                $( '#schedule_'+id+'_box .well #message h2' ).css("color","#FFF");
+            }
 
           
-        // });
+        });
     }
 
     function recalcularTiempos(index, indices) {
@@ -490,9 +481,12 @@
     };
 
     function AppLoad() {
-      console.log('Iniciamos la aplicación');
+
       initializeMainForm();
       initializeSchedulesForm();
+
+      //var elemento=document.getElementById('botton-add');
+      //elemento.addEventListener('click', addRow, false);
 
       // hacemos el primer clik en añadir servicio
       document.getElementById('botton-add').click();

@@ -86,6 +86,7 @@ class ScheduleController extends Controller
         $em = $this->getDoctrine()->getManager();
         $schedules = $em->getRepository('AppBundle:Schedule')->existScheduleStartHour($room, $scheduleDate, $startTime, $endTime);
         return new JsonResponse($schedules);
+
     }
 
     
@@ -106,6 +107,28 @@ class ScheduleController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $schedules = $em->getRepository('AppBundle:Schedule')->existScheduleFinishHour($room, $scheduleDate, $startTime, $endTime);
+        return new JsonResponse($schedules);
+    }
+
+    /**
+     * Verify if exist any schedule at same time.
+     * This controler is for test
+     * @Route("/exist-schedule-inThisHour", name="exist-schedule-inthishour")
+     * @Method({"GET", "POST"})
+     */
+    public function existScheduleInThisHour(Request $request) {
+        $startTime = $request->query->get('st', null);
+        $endTime = $request->query->get('et', null);
+        $room = $request->query->get('room', null);
+        $scheduleDate = $request->query->get('scheduleDate', null);
+
+        dump($scheduleDate);
+
+        $customers = array('room'=>$room, 'scheduleDate'=> $scheduleDate, 'startTime'=>$startTime, 'endTime'=>$endTime);
+        //ld($customers);
+
+        $em = $this->getDoctrine()->getManager();
+        $schedules = $em->getRepository('AppBundle:Schedule')->existScheduleInThisHour($room, $scheduleDate, $startTime, $endTime);
         return new JsonResponse($schedules);
     }
     

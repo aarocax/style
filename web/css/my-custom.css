@@ -31,3 +31,19 @@
 #table-cash strong .debt {
 	color: #C90000;
 }
+
+/* page title*/
+.page-title h3 {
+	margin-top: 0px;
+  margin-bottom: 10px;
+  color: red;
+}
+
+.close {
+   opacity: 0.7;
+   color: red;
+}
+
+.schedule .form-group {
+  margin-bottom: 0px;
+}

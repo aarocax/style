@@ -47,7 +47,6 @@ class TimeMachine
     */ 
 	public static function roundMinutes($now)
 	{
-    
     if ($now['minutes']%15 === 0) {
       $minutes = $now['minutes'];          
     } else {
@@ -68,30 +67,30 @@ class TimeMachine
     return date('H:i',strtotime($now['hours'].":".$minutes));
   }
 
-    public static function arrayIntervaloHoras($inicial, $final, $interval){
-        $horaInicial=$inicial;
-        $horaFinal=$final;
-        $minutoAnadir=$interval;
-        while ( $horaInicial != $horaFinal) {
-            $horas[] = $horaInicial; 
-            $segundos_horaInicial=strtotime($horaInicial);
-            $segundos_minutoAnadir=$minutoAnadir*60;
-            $nuevaHora=date("H:i",$segundos_horaInicial+$segundos_minutoAnadir);
-            $horaInicial=$nuevaHora;
-        }
-        return $horas;
-    }
+  public static function arrayIntervaloHoras($inicial, $final, $interval){
+      $horaInicial=$inicial;
+      $horaFinal=$final;
+      $minutoAnadir=$interval;
+      while (($horaInicial != $horaFinal) && (strtotime($horaInicial) < strtotime($horaFinal))) {
+          $horas[] = $horaInicial; 
+          $segundos_horaInicial=strtotime($horaInicial);
+          $segundos_minutoAnadir=$minutoAnadir*60;
+          $nuevaHora=date("H:i",$segundos_horaInicial+$segundos_minutoAnadir);
+          $horaInicial=$nuevaHora;
+      }
+      return $horas;
+  }
 
-    public static function arrayHoras($interval){
-        $horaInicial="08:00";
-        $minutoAnadir=$interval;
-        for ($i=0; $i < 56; $i++) { 
-            $horas[$horaInicial] = array('horaCita'=>$horaInicial,'nombreCita'=>null,'idCita'=>null);
-            $segundos_horaInicial=strtotime($horaInicial);
-            $segundos_minutoAnadir=$minutoAnadir*60;
-            $nuevaHora=date("H:i",$segundos_horaInicial+$segundos_minutoAnadir);
-            $horaInicial=$nuevaHora;
-        }
-        return $horas;
-    }
+  public static function arrayHoras($interval){
+      $horaInicial="08:00";
+      $minutoAnadir=$interval;
+      for ($i=0; $i < 56; $i++) { 
+          $horas[$horaInicial] = array('horaCita'=>$horaInicial,'nombreCita'=>null,'idCita'=>null);
+          $segundos_horaInicial=strtotime($horaInicial);
+          $segundos_minutoAnadir=$minutoAnadir*60;
+          $nuevaHora=date("H:i",$segundos_horaInicial+$segundos_minutoAnadir);
+          $horaInicial=$nuevaHora;
+      }
+      return $horas;
+  }
 }

@@ -51,11 +51,17 @@ class Service
     private $price;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Schedule", mappedBy="service", cascade={"persist", "remove"})
+     * @Assert\Valid()
+     */
+    protected $schedules;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        //$this->schedules = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->schedules = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function __toString()
@@ -163,6 +169,16 @@ class Service
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * Get schedules
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSchedules()
+    {
+        return $this->schedules;
     }
 
     
