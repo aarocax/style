@@ -114,16 +114,11 @@
 			                            {% endif %}
 			                          {% else %}
 			                            <center>
-				                            <form action="{{path('appointment_new')}}" method="post">
-				                                	<input type="hidden" name="date" value="{{sala['semana']['fechaLunes']}}"/>
-				                                	<input type="hidden" name="time" value="{{sala['semana']['Lunes'][h]['horaCita']}}"/>
-				                                	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
-				                                	{% if sala['semana']['fechaLunes'] >= date|date('Y-m-d') %}
-				                                		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
-				                                	{% else %}
-				                                		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons calendar-buttons-pass">-</button>
-				                                	{% endif %}
-				                            </form>
+			                            	{% if sala['semana']['fechaLunes'] >= date|date('Y-m-d') %}
+				                            	<span name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons calendar-buttons-pass">-</span>
+				                            {% else %}
+				                              <span name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons calendar-buttons-pass">-</span>
+				                            {% endif %}
 			                            </center>
 			                          {% endif %}
                       				</td>
@@ -144,7 +139,11 @@
 				                             	<input type="hidden" name="date" value="{{sala['semana']['fechaMartes']}}"/>
 				                             	<input type="hidden" name="time" value="{{sala['semana']['Martes'][h]['horaCita']}}"/>
 				                             	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
-				                             	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+				                             	{% if sala['semana']['fechaMartes'] >= date|date('Y-m-d') %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+				                             	{% else %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons calendar-buttons-pass">-</button>
+				                             	{% endif %}
 				                            </form>
 			                            </center>
 			                          {% endif %}
@@ -166,7 +165,11 @@
 				                             	<input type="hidden" name="date" value="{{sala['semana']['fechaMiercoles']}}"/>
 				                             	<input type="hidden" name="time" value="{{sala['semana']['Miercoles'][h]['horaCita']}}"/>
 				                             	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
-				                             	<button type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+				                             	{% if sala['semana']['fechaMiercoles'] >= date|date('Y-m-d') %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+				                             	{% else %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons calendar-buttons-pass">-</button>
+				                             	{% endif %}
 				                            </form>
 			                            </center>
 			                          {% endif %}
@@ -188,7 +191,11 @@
 				                             	<input type="hidden" name="date" value="{{sala['semana']['fechaJueves']}}"/>
 				                             	<input type="hidden" name="time" value="{{sala['semana']['Jueves'][h]['horaCita']}}"/>
 				                             	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
-				                             	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+				                             	{% if sala['semana']['fechaJueves'] >= date|date('Y-m-d') %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+				                             	{% else %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons calendar-buttons-pass">-</button>
+				                             	{% endif %}
 				                            </form>
 			                            </center>
 			                          {% endif %}
@@ -210,7 +217,11 @@
 		                                	<input type="hidden" name="date" value="{{sala['semana']['fechaViernes']}}"/>
 		                                	<input type="hidden" name="time" value="{{sala['semana']['Viernes'][h]['horaCita']}}"/>
 		                                	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
-		                                	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+		                                	{% if sala['semana']['fechaViernes'] >= date|date('Y-m-d') %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+				                             	{% else %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons calendar-buttons-pass">-</button>
+				                             	{% endif %}
 		                                </form>
 	                                </center>
 			                          {% endif %}
@@ -232,7 +243,11 @@
 		                                	<input type="hidden" name="date" value="{{sala['semana']['fechaSabado']}}"/>
 		                                	<input type="hidden" name="time" value="{{sala['semana']['Sabado'][h]['horaCita']}}"/>
 		                                	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
-		                                	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+		                                	{% if sala['semana']['fechaSabado'] >= date|date('Y-m-d') %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+				                             	{% else %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons calendar-buttons-pass">-</button>
+				                             	{% endif %}
 		                                </form>
 	                                </center>
 		                            {% endif %}
@@ -254,7 +269,11 @@
 		                                	<input type="hidden" name="date" value="{{sala['semana']['fechaDomingo']}}"/>
 		                                	<input type="hidden" name="time" value="{{sala['semana']['Domingo'][h]['horaCita']}}"/>
 		                                	<input type="hidden" name="room" value="{{ sala['id'] }}"/>
-		                                	<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons" >-</button>
+		                                	{% if sala['semana']['fechaDomingo'] >= date|date('Y-m-d') %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons">-</button>
+				                             	{% else %}
+				                             		<button formaction="{{path('appointment_new')}}" type="submit" name="your_name" value="your_value" class="btn btn-default btn-xs calendar-buttons calendar-buttons-pass">-</button>
+				                             	{% endif %}
 		                                </form>
 	                                </center>
 			                          {% endif %}
