@@ -150,7 +150,7 @@ class AppointmentController extends Controller
         return $this->render('Appointment/edit.html.twig',array(
             'appointment'      => $appointment,
             'form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            //'delete_form' => $deleteForm->createView(),
         ));
     }
 
